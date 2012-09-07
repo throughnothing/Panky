@@ -2,10 +2,9 @@ package Panky::Chat::Jabber::Echo;
 
 # ABSTRACT: Simple Panky::Jabber dispatcher that just echo's messages
 
-sub message {
-    my ($self, $room, $msg) = @_;
+sub private_message {
+    my ($self, $panky, $room, $msg) = @_;
     $room->make_message( body => 'echo: ' . $msg->body )->send;
-    return 1;
 }
 
 1;

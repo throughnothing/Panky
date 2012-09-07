@@ -5,11 +5,12 @@ use URI;
 
 # ABSTRACT: Object for interacting with the Github API
 
-# Modeling off of:
-# https://github.com/github/janky/blob/master/lib/janky/github/api.rb
-
+has events => sub { [qw(
+    pull_request pull_request_review_comment commit_comment push
+)]};
 has url => 'https://api.github.com';
 has ua => sub { Mojo::UserAgent->new };
+has secret => 'panky-secret';
 has [qw( user pwd hook_url )];
 
 sub new {
@@ -43,7 +44,19 @@ sub get_hook {
 }
 
 sub create_hook {
-    my ($self, $nwo, $url) = @_;
+    my ($self, $nwo) = @_;
+    my $res = $self->_req(
+        POST_JSON => "/repos/$nwo/hooks", {
+            name => 'web', active => 1,
+            config => {
+                url => $self->hook_url,
+                secret => $self->secret,
+                content_type => 'json'
+            },
+            events => $self->events,
+        }
+    );
+    return $res;
 }
 
 sub test_hook {
@@ -55,9 +68,9 @@ sub test_hook {
 # - method: GET/POST
 # - path: /repos/:user/:repo
 sub _req {
-    my($self, $method, $path) = @_;
+    my($self, $method, $path, $json) = @_;
     $method = lc($method);
-    $self->ua->$method( $self->url . $path)->res->json;
+    return $self->ua->$method( $self->url . $path, $json )->res->json;
 }
 
 1;

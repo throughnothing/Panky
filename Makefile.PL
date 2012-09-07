@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-
+use 5.010000;
 
 use ExtUtils::MakeMaker 6.30;
 
@@ -32,6 +32,7 @@ my %WriteMakefileArgs = (
     "AnyEvent::XMPP::IM::Connection" => 0,
     "EV" => "4.11",
     "Exporter" => 0,
+    "Hash::AsObject" => 0,
     "IO::Socket::SSL" => "1.76",
     "Module::Pluggable" => 0,
     "Mojo::Base" => 0,

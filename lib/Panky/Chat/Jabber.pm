@@ -7,13 +7,16 @@ use Mojo::Base -base;
 
 # ABSTRACT: Manage Jabber connection for Panky
 
-has [ qw( host jid password panky room ) ];
+has [ qw( host jid password panky room nick muc jc ) ];
 
 sub connect {
     my ($self) = @_;
 
     # Parse user/domain from jid
     my ($username, $domain) = split /@/, $self->jid;
+
+    # Set the nick to the first fart of the JID
+    $self->nick( $username );
 
     # Create the connection object
     my $jc = AnyEvent::XMPP::IM::Connection->new(
@@ -24,17 +27,23 @@ sub connect {
         resource => 'panky',
     );
 
+    # Save the jabber connection to oursef
+    $self->jc( $jc );
+
     # Add MUC Extension
     $jc->add_extension (my $d = AnyEvent::XMPP::Ext::Disco->new);
     $jc->add_extension(my $muc = AnyEvent::XMPP::Ext::MUC->new( disco => $d ));
 
+    # Save the muc object to ourself
+    $self->muc( $muc );
+
     # Join the room once we're connected
     $jc->reg_cb (stream_ready => sub {
-        $muc->join_room($jc, $self->room, 'tiltbot')
+        $muc->join_room($jc, $self->room, $self->nick)
     });
 
     # Handle messages
-    $muc->reg_cb( message => sub { $self->dispatch( @_ ) });
+    $muc->reg_cb( message => sub { $self->_dispatch( @_ ) });
 
     # Reconnect on disconnect
     $jc->reg_cb (disconnect => sub { $jc->connect });
@@ -50,19 +59,40 @@ sub connect {
     return $self;
 }
 
-sub dispatch {
+# Tells the chat agent to say something in the chat room
+# msg - the body of the message to send to the room
+# to_nick - (optional) the user to say the msg to ("$to_nick: $msg")
+sub say {
+    my ($self, $msg, $to_nick) = @_;
+
+    # Prepend $to_nick to message if given
+    $msg = "$to_nick: $msg" if $to_nick;
+
+    # Send the msg
+    my $m = $self->muc->get_room( $self->jc, $self->room )->make_message(
+        body => $msg
+    )->send;
+}
+
+# Dispatches messages received in the chatroom to their appropriate
+# listeners based on the type of the message.
+sub _dispatch {
     my ($self, $muc, $room, $msg, $is_echo) = @_;
 
     # We don't care about echo's or delayed messages
     return if $is_echo || $msg->is_delayed;
 
-    my $method = 'message';
+    my $nick = $self->nick;
+    # private_message if it's private, otherwise, if it's directed TO us
+    # (starts with our name) make it a directed_message, otherwise its
+    # just regular chatter in the chatroom.
+    my $method = $msg->is_private ? 'private_message' :
+                 $msg->body ~~ /^$nick\W/ ? 'directed_message' : 'message';
     # Plugins come from Module::Pluggable
     for ( $self->plugins ) {
         # Make sure it can handle this method
         next unless $_->can($method);
-        # As soon as something returns a value, we're done
-        last if $_->$method( $room, $msg );
+        $_->$method( $self->panky, $room, $msg );
     }
 }
 

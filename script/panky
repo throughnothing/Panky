@@ -3,6 +3,7 @@ use Mojo::Base -strict;
 
 use File::Basename 'dirname';
 use File::Spec::Functions qw(catdir splitdir);
+use lib 'lib';
 
 # Source directory has precedence
 my @base = (splitdir(dirname(__FILE__)), '..');

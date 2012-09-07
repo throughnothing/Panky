@@ -3,15 +3,23 @@ use Mojo::Base 'Mojolicious';
 use Panky::Chat::Jabber;
 use Panky::Chat::Mock;
 use Panky::Github::API;
+#use Panky::Schema;
 
 # ABSTRACT: Panky is a chatting, github, and jenkins loving web-app
 
 has [qw( chat github base_url )];
 
+#has schema => sub {
+    #Schema->connect('dbi:SQLite:panky.db')
+#}
+
 my @required_env = qw( PANKY_BASE_URL PANKY_GITHUB_USER PANKY_GITHUB_PWD );
 
 sub startup {
     my ($self) = @_;
+
+    # Create the db if this is the first time the app is run
+    #eval { $self->schema->deploy };
 
     # Make sure we have all required $ENV vars
     !$ENV{$_} ? die "$_ Required!" : 0 for @required_env;
@@ -56,15 +64,27 @@ sub startup {
 Panky aims to be a chatting, github and jenkins loving
 web-app/bot/do-it-all/chef(?).
 
-Panky will connect to your chat server, update you about what's going
-on with your github repos, and enable you to get info about them on demand.
+B<Note: L<Panky> is still in active development and is not feature complete>
 
-Panky will also be able to get Jenkins build statuses, create builds, and
-report back to the chat with its findings.
+Currently, Panky will connect to your chat server, update you about what's
+going on with your github repos (new pushes, pull request activity, comments,
+etc.) and enable you to get info about them on demand.
+
+In the future, Panky will be able to get Jenkins build statuses,
+create builds, run builds, and report back to the chat with its findings.
 
 Panky will not make you a sandwich (yet).
 
 =head1 INSTALLING
+
+L<Panky> requires a non-blocking server in order to run.  This means that
+you probably want to use either L<Twiggy>, or the builtin L<Mojolicious>
+server.
+
+=head2 Environment Variables
+
+L<Panky> is configured via environment variables to make it easy to install on
+systems like L<Heroku|http://heroku.com>.
 
 The following environment variables must be set for L<Panky> to run:
 
@@ -109,4 +129,37 @@ full C<jid> of the room, such as C<room@conference.jabber.server.com>.
 
 =back
 
+=head2 Heroku
+
+To run L<Panky> in L<Heroku|http://heroku.com>, the easiest way is to use
+the L<Perloku|https://github.com/judofyr/perloku> buildpack.
+
+    $ git clone https://github.com/throughnothing/Panky
+    $ cd Panky
+    $ heroku create -s cedar --buildpack http://github.com/judofyr/perloku.git
+
+Now your heroku app is setup and ready to receive the L<Panky> application.
+Before you push L<Panky> to your app, you'll want to setup the environment
+variables described above by using:
+
+    $ heroku config:add ENVIRONMENT_VARIABLE="value"
+
+For each config value that you wish to set.
+
+
 =head1 USAGE
+
+Once configured and setup, L<Panky> is mostly interacted with via chat
+(jabber by default).  Below are some commands that L<Panky> accepts.  In
+general, these commands must be directed at the L<Panky> chat bot
+(i.e you must mention the bot by name: "panky: COMMAND").
+
+=over
+
+=item gh setup I<FULL_REPO_NAME>
+
+This will direct L<Panky> to setup L<Github|http://github.com> Hooks for the
+repo in question.  The C<GITHUB_USER> that is setup for L<Panky> must have
+access to the repo if it is private for this to work.
+
+=back
