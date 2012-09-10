@@ -21,6 +21,12 @@ sub new {
 # Dummy setup function in case a sub-class doesn't need one
 sub setup { }
 
+# Dummy connect function
+sub connect { }
+
+# Dummy say function
+sub say { }
+
 1;
 
 =head1 SYNOPSIS

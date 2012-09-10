@@ -1,17 +1,11 @@
 package Panky;
 use Mojo::Base 'Mojolicious';
-use Panky::Chat::Jabber;
-use Panky::Chat::Mock;
+use Panky::CI::Jenkins;
 use Panky::Github::API;
-#use Panky::Schema;
 
-# ABSTRACT: Panky is a chatting, github, and jenkins loving web-app
+# ABSTRACT: Panky is a chatty, github-and-ci helper bot for your team
 
-has [qw( chat github base_url )];
-
-#has schema => sub {
-    #Schema->connect('dbi:SQLite:panky.db')
-#}
+has [qw( chat github ci base_url )];
 
 my @required_env = qw( PANKY_BASE_URL PANKY_GITHUB_USER PANKY_GITHUB_PWD );
 
@@ -24,13 +18,42 @@ sub startup {
     # Make sure we have all required $ENV vars
     !$ENV{$_} ? die "$_ Required!" : 0 for @required_env;
 
-    if( $ENV{PANKY_CHAT_JABBER_JID} ) {
+    # Setup github
+    $self->_setup_gh;
+
+    # Setup our Chat Bot
+    $self->_setup_chat;
+
+    # Setup Jenkins
+    $self->_setup_ci;
+
+    # Set up our routes
+    my $r = $self->routes;
+
+    # Home Page Route
+    $r->get('/')->to('app#home');
+
+    # Github Hooks point here
+    $r->post('/_github')->to('github#hook');
+}
+
+sub _setup_chat {
+    my ($self) = @_;
+
+    my $module = "Panky::Chat::" . ($ENV{PANKY_CHAT} || 'Jabber');
+    # If PANKY_CHAT is set, or we've set a Jabber JID
+    if( $ENV{PANKY_CHAT} || $ENV{PANKY_CHAT_JABBER_JID} ) {
+        eval "require $module";
         # Create Jabber Chat object
-        $self->chat( Panky::Chat::Jabber->new( panky => $self )->connect );
+        $self->chat( $module->new( panky => $self )->connect );
     } else {
-        # Just use a Mock chat object otherwise
-        $self->chat( Panky::Chat::Mock->new );
+        # Just use a Base chat object (which does nothing) otherwise
+        $self->chat( Panky::Chat->new );
     }
+}
+
+sub _setup_gh {
+    my ($self) = @_;
 
     # Initialize GitHub API
     my $github_hook_url =
@@ -40,15 +63,13 @@ sub startup {
         pwd      => $ENV{PANKY_GITHUB_PWD},
         hook_url => join( '/', $ENV{PANKY_BASE_URL}, '_github' ),
     ) );
+}
 
-    # Set up our routes
-    my $r = $self->routes;
+sub _setup_ci {
+    my ($self) = @_;
 
-    # Home Page Route
-    $r->get('/')->to('app#home');
-
-    # Github Hooks go here
-    $r->post('/_github')->to('github#hook');
+    # TODO: This does nothing so far
+    $self->ci( Panky::CI::Jenkins->new );
 }
 
 1;
