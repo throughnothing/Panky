@@ -5,7 +5,7 @@ use Mojo::Base 'Mojolicious::Controller';
 
 sub home {
     my ($self) = @_;
-    $self->render( message => "LOL" );
+    $self->render( message => "This is Panky." );
 }
 
 1;
