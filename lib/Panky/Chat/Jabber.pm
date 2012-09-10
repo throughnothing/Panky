@@ -5,7 +5,7 @@ use AnyEvent::XMPP::Ext::MUC;
 use Module::Pluggable search_path => [ 'Panky::Chat::Jabber' ], require => 1;
 use Mojo::Base 'Panky::Chat';
 
-# ABSTRACT: Manage Jabber connection for Panky
+# ABSTRACT: Jabber Chat Agent for Panky
 
 has [ qw( host jid password panky room nick muc jc ) ];
 
@@ -38,7 +38,7 @@ sub connect {
         domain => $domain,
         password => $self->password,
         host => $self->host,
-        resource => 'panky',
+        resource => 'panky-local',
     );
 
     # Save the jabber connection to oursef
@@ -111,3 +111,40 @@ sub _dispatch {
 }
 
 1;
+
+=head1 SYNOPSIS
+
+L<Panky::Chat::Jabber> provides C<Jabber> chat support for the L<Panky> chat
+bot.
+
+=head1 Environment Variables
+
+The following Environment Variables are required for this module to work:
+
+=over
+
+=item B<PANKY_CHAT_JABBER_JID>
+
+The C<jid> of the L<Panky> jabber chat account.
+
+=item B<PANKY_CHAT_JABBER_PWD>
+
+The password of the L<Panky> jabber chat account.
+
+=item B<PANKY_CHAT_JABBER_ROOM>
+
+The C<jid> of the jabber chat room for L<Panky> to join
+C<(room@conference.jabber.server.com)>
+
+=back
+
+And the following Environment Variables are optional:
+
+=over
+
+=item B<PANKY_CHAT_JABBER_HOST>
+
+This allows you to optionally set a host for the jabber connectino if it is
+different from the C<domain> in the C<jid (user@domain.tld)>.
+
+=back
