@@ -12,8 +12,9 @@ sub push {
     my $branch = $self->branch_from_ref( $payload->ref );
     my $msg  = ( split /\n/, $payload->commits->[0]->{message} )[0];
     my $user = $payload->commits->[0]->{author}{username};
+    my $url = $self->shorten( $payload->commits->[0]->{url} );
 
-    $panky->chat->say( "[$name/$branch]($user) $head: $msg" );
+    $panky->chat->say( "[$name/$branch]($user) $head: $msg $url" );
 }
 
 # Called when a 'commit_comment' hook is received
