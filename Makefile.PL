@@ -37,7 +37,9 @@ my %WriteMakefileArgs = (
     "Module::Pluggable" => 0,
     "Mojo::Base" => 0,
     "Mojo::UserAgent" => 0,
-    "URI" => 0
+    "URI" => 0,
+    "WWW::Shorten" => 0,
+    "WWW::Shorten::GitHub" => "v0.1.3"
   },
   "VERSION" => "0.001",
   "test" => {

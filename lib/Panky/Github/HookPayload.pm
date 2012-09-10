@@ -29,9 +29,6 @@ sub parse {
     return $data
 }
 
-# Returns a branch name from a refspec (refs/heads/master => master)
-sub branch_from_ref { ( split qr{refs/heads/}, $_[0] )[-1] }
-
 # Determines the 'type' of the payload
 sub _determine_type {
     my ($payload) = @_;

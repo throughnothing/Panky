@@ -1,7 +1,5 @@
 package Panky::Github::HookActor::Generic;
-use Mojo::Base -base;
-
-use Panky::Github::HookPayload qw( branch_from_ref );
+use Mojo::Base 'Panky::Github::HookActor::Base';
 
 # ABSTRACT: Generic actor to act upon Github Hook postbacks
 
@@ -11,7 +9,7 @@ sub push {
 
     my $name = $payload->repository->name;
     my $head = substr( $payload->after, 0, 6 );
-    my $branch = branch_from_ref( $payload->ref );
+    my $branch = $self->branch_from_ref( $payload->ref );
     my $msg  = ( split /\n/, $payload->commits->[0]->{message} )[0];
     my $user = $payload->commits->[0]->{author}{username};
 
@@ -38,7 +36,7 @@ sub pull_request {
     my $action = $payload->action;
     my $title  = $payload->pull_request->title;
     my $user = $payload->sender->login;
-    my $url = $payload->pull_request->html_url;
+    my $url = $self->shorten( $payload->pull_request->html_url );
     my $head = $payload->pull_request->head->ref;
     my $base = $payload->pull_request->base->ref;
 
