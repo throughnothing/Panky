@@ -62,7 +62,7 @@ sub startup {
 =head1 SYNOPSIS
 
 Panky aims to be a chatting, github and jenkins loving
-web-app/bot/do-it-all/chef(?).
+web-app/bot/do-it-all/chef(?) for your team.
 
 B<Note: L<Panky> is still in active development and is not feature complete>
 

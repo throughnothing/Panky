@@ -9,7 +9,7 @@ version 0.001
 # SYNOPSIS
 
 Panky aims to be a chatting, github and jenkins loving
-web-app/bot/do-it-all/chef(?).
+web-app/bot/do-it-all/chef(?) for your team.
 
 __Note: [Panky](http://search.cpan.org/perldoc?Panky) is still in active development and is not feature complete__
 
