@@ -3,11 +3,25 @@ use AnyEvent::XMPP::IM::Connection;
 use AnyEvent::XMPP::Ext::Disco;
 use AnyEvent::XMPP::Ext::MUC;
 use Module::Pluggable search_path => [ 'Panky::Chat::Jabber' ], require => 1;
-use Mojo::Base -base;
+use Mojo::Base 'Panky::Chat';
 
 # ABSTRACT: Manage Jabber connection for Panky
 
 has [ qw( host jid password panky room nick muc jc ) ];
+
+has required_env => sub{[qw(
+    PANKY_CHAT_JABBER_JID PANKY_CHAT_JABBER_PWD PANKY_CHAT_JABBER_ROOM
+)]};
+
+sub setup {
+    my ($self) = @_;
+
+    # Set up everything that isn't already setup (i.e was not passed in)
+    $self->jid( $self->jid // $ENV{PANKY_CHAT_JABBER_JID} );
+    $self->password( $self->password // $ENV{PANKY_CHAT_JABBER_PWD} );
+    $self->room( $self->room // $ENV{PANKY_CHAT_JABBER_ROOM} );
+    $self->host( $self->host // $ENV{PANKY_CHAT_JABBER_HOST} );
+}
 
 sub connect {
     my ($self) = @_;
@@ -24,7 +38,7 @@ sub connect {
         domain => $domain,
         password => $self->password,
         host => $self->host,
-        resource => 'panky',
+        resource => 'panky-local',
     );
 
     # Save the jabber connection to oursef

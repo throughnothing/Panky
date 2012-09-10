@@ -26,13 +26,7 @@ sub startup {
 
     if( $ENV{PANKY_CHAT_JABBER_JID} ) {
         # Create Jabber Chat object
-        $self->chat( Panky::Chat::Jabber->new(
-            panky => $self,
-            jid => $ENV{PANKY_CHAT_JABBER_JID},
-            password => $ENV{PANKY_CHAT_JABBER_PWD},
-            host => $ENV{PANKY_CHAT_JABBER_HOST},
-            room => $ENV{PANKY_CHAT_JABBER_ROOM},
-        )->connect );
+        $self->chat( Panky::Chat::Jabber->new( panky => $self )->connect );
     } else {
         # Just use a Mock chat object otherwise
         $self->chat( Panky::Chat::Mock->new );
