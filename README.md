@@ -85,6 +85,12 @@ variables described above by using:
 
 For each config value that you wish to set.
 
+Once all of that is set up, you can deploy the app using:
+
+    $ git push heroku master
+
+This will deploy your app code, install all dependencies, and run it.
+
 # USAGE
 
 Once configured and setup, [Panky](http://search.cpan.org/perldoc?Panky) is mostly interacted with via chat
@@ -95,7 +101,8 @@ general, these commands must be directed at the [Panky](http://search.cpan.org/p
 - gh setup _FULL_REPO_NAME_
 
 This will direct [Panky](http://search.cpan.org/perldoc?Panky) to setup [Github](http://github.com) Hooks for the
-repo in question.  The `GITHUB_USER` that is setup for [Panky](http://search.cpan.org/perldoc?Panky) must have
+repo in question. _FULL_REPO_NAME_ should look like `user/repo` or
+`organization/repo`.  The `GITHUB_USER` that is setup for [Panky](http://search.cpan.org/perldoc?Panky) must have
 access to the repo if it is private for this to work.
 
 # AUTHOR

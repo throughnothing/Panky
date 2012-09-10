@@ -146,6 +146,11 @@ variables described above by using:
 
 For each config value that you wish to set.
 
+Once all of that is set up, you can deploy the app using:
+
+    $ git push heroku master
+
+This will deploy your app code, install all dependencies, and run it.
 
 =head1 USAGE
 
@@ -159,7 +164,8 @@ general, these commands must be directed at the L<Panky> chat bot
 =item gh setup I<FULL_REPO_NAME>
 
 This will direct L<Panky> to setup L<Github|http://github.com> Hooks for the
-repo in question.  The C<GITHUB_USER> that is setup for L<Panky> must have
+repo in question. I<FULL_REPO_NAME> should look like C<user/repo> or
+C<organization/repo>.  The C<GITHUB_USER> that is setup for L<Panky> must have
 access to the repo if it is private for this to work.
 
 =back
