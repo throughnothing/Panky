@@ -1,5 +1,5 @@
 package Panky::Github::HookActor::Generic;
-use Mojo::Base 'Panky::Github::HookActor::Base';
+use Mojo::Base 'Panky::Github::HookActor';
 
 # ABSTRACT: Generic actor to act upon Github Hook postbacks
 

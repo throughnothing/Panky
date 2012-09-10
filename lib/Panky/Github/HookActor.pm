@@ -1,4 +1,4 @@
-package Panky::Github::HookActor::Base;
+package Panky::Github::HookActor;
 use Mojo::Base -base;
 use WWW::Shorten 'GitHub';
 
@@ -15,7 +15,7 @@ sub shorten { makeashorterlink( $_[1] ) }
 
 =head1 SYNOPSIS
 
-L<Panky::Github::HookActor::Base> is the base class for  all of your
+L<Panky::Github::HookActor> is the base class for  all of your
 L<Panky::Github::HookActor>'s that you may want to create.  Any C<HookActor>
 should use this as the base class.
 
@@ -29,7 +29,7 @@ This function accepts a ref in the form C<refs/heads/master> and returns
 the branch name C<master>.
 
     package Panky::Github::HookActor::Mine;
-    use Mojo::Base 'Panky::Github::HookActor::Base';
+    use Mojo::Base 'Panky::Github::HookActor';
 
     sub random_function {
         my ($self, %args) = @_;
@@ -44,7 +44,7 @@ This function accepts a Github url and returns a shortened version from
 L<http://git.io/|http://git.io/>.
 
     package Panky::Github::HookActor::Mine;
-    use Mojo::Base 'Panky::Github::HookActor::Base';
+    use Mojo::Base 'Panky::Github::HookActor';
 
     sub random_function {
         my ($self, %args) = @_;
