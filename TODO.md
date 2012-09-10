@@ -5,3 +5,4 @@
 * DBIx::Class w/SQLite db
 * Settings/config for what github events to 'say' in chatroom?
 * Jenkins API Integration
+* Make the '/' page look better (good)
