@@ -1,0 +1,135 @@
+{
+   "repository" : {
+      "size" : 128,
+      "watchers" : 1,
+      "created_at" : "2010-10-06T09:05:59-07:00",
+      "url" : "https://github.com/throughnothing/dotfiles",
+      "open_issues" : 0,
+      "has_downloads" : true,
+      "owner" : {
+         "email" : "throughnothing@gmail.com",
+         "name" : "throughnothing"
+      },
+      "has_issues" : true,
+      "language" : "VimL",
+      "name" : "dotfiles",
+      "private" : false,
+      "has_wiki" : true,
+      "description" : "my dot files",
+      "pushed_at" : "2012-08-15T13:44:50-07:00",
+      "homepage" : "",
+      "forks" : 1,
+      "fork" : false,
+      "stargazers" : 1
+   },
+   "compare" : "https://github.com/throughnothing/dotfiles/compare/8b564b15912e...4fb8baeff9c3",
+   "ref" : "refs/heads/master",
+   "forced" : false,
+   "deleted" : false,
+   "after" : "4fb8baeff9c338fa8e4d9f4d744d8c1d6dd02c98",
+   "created" : false,
+   "commits" : [
+      {
+         "added" : [],
+         "author" : {
+            "email" : "throughnothing@gmail.com",
+            "name" : "William Wolf",
+            "username" : "throughnothing"
+         },
+         "modified" : [
+            "tmux.conf"
+         ],
+         "message" : "more tmux updates",
+         "committer" : {
+            "email" : "throughnothing@gmail.com",
+            "name" : "William Wolf",
+            "username" : "throughnothing"
+         },
+         "timestamp" : "2012-07-08T22:32:36-07:00",
+         "removed" : [],
+         "distinct" : true,
+         "url" : "https://github.com/throughnothing/dotfiles/commit/9ca98711eee8d4fcf80f41f46fcce8470617e230",
+         "id" : "9ca98711eee8d4fcf80f41f46fcce8470617e230"
+      },
+      {
+         "added" : [
+            "gpg/crowdtilt_key.pub"
+         ],
+         "author" : {
+            "email" : "throughnothing@gmail.com",
+            "name" : "William Wolf",
+            "username" : "throughnothing"
+         },
+         "modified" : [
+            "alias",
+            "bashrc",
+            "dzil/profiles/default/plugins.ini",
+            "gvimrc",
+            "vimrc"
+         ],
+         "message" : "Updates.",
+         "committer" : {
+            "email" : "throughnothing@gmail.com",
+            "name" : "William Wolf",
+            "username" : "throughnothing"
+         },
+         "timestamp" : "2012-07-17T15:12:44-07:00",
+         "removed" : [],
+         "distinct" : true,
+         "url" : "https://github.com/throughnothing/dotfiles/commit/69e3ef63e1f47f2bc354e299d7ce92dbe03ac5e5",
+         "id" : "69e3ef63e1f47f2bc354e299d7ce92dbe03ac5e5"
+      },
+      {
+         "added" : [
+            "vim/bundle/vim-matchit/.gitignore",
+            "vim/bundle/vim-matchit/doc/matchit.txt",
+            "vim/bundle/vim-matchit/plugin/matchit.vim"
+         ],
+         "author" : {
+            "email" : "throughnothing@gmail.com",
+            "name" : "William Wolf",
+            "username" : "throughnothing"
+         },
+         "modified" : [],
+         "message" : "adding vim-matchit",
+         "committer" : {
+            "email" : "throughnothing@gmail.com",
+            "name" : "William Wolf",
+            "username" : "throughnothing"
+         },
+         "timestamp" : "2012-08-09T14:09:56-07:00",
+         "removed" : [],
+         "distinct" : true,
+         "url" : "https://github.com/throughnothing/dotfiles/commit/4fb8baeff9c338fa8e4d9f4d744d8c1d6dd02c98",
+         "id" : "4fb8baeff9c338fa8e4d9f4d744d8c1d6dd02c98"
+      }
+   ],
+   "pusher" : {
+      "name" : "none"
+   },
+   "head_commit" : {
+      "added" : [
+         "vim/bundle/vim-matchit/.gitignore",
+         "vim/bundle/vim-matchit/doc/matchit.txt",
+         "vim/bundle/vim-matchit/plugin/matchit.vim"
+      ],
+      "author" : {
+         "email" : "throughnothing@gmail.com",
+         "name" : "William Wolf",
+         "username" : "throughnothing"
+      },
+      "modified" : [],
+      "message" : "adding vim-matchit",
+      "committer" : {
+         "email" : "throughnothing@gmail.com",
+         "name" : "William Wolf",
+         "username" : "throughnothing"
+      },
+      "timestamp" : "2012-08-09T14:09:56-07:00",
+      "removed" : [],
+      "distinct" : true,
+      "url" : "https://github.com/throughnothing/dotfiles/commit/4fb8baeff9c338fa8e4d9f4d744d8c1d6dd02c98",
+      "id" : "4fb8baeff9c338fa8e4d9f4d744d8c1d6dd02c98"
+   },
+   "before" : "8b564b15912ed0b64c3ee73202a6af736f4d77c9"
+}

@@ -1,6 +1,6 @@
 # NAME
 
-Panky - Panky is a chatting, github, and jenkins loving web-app
+Panky - Panky is a chatty, github-and-ci helper bot for your team
 
 # VERSION
 

@@ -40,13 +40,15 @@ sub startup {
 sub _setup_chat {
     my ($self) = @_;
 
-    my $module = "Panky::Chat::" . ($ENV{PANKY_CHAT} || 'Jabber');
+    my $module = 'Panky::Chat::' . ($ENV{PANKY_CHAT} || 'Jabber');
     # If PANKY_CHAT is set, or we've set a Jabber JID
     if( $ENV{PANKY_CHAT} || $ENV{PANKY_CHAT_JABBER_JID} ) {
         eval "require $module";
         # Create Jabber Chat object
         $self->chat( $module->new( panky => $self )->connect );
     } else {
+        $module = 'Panky::Chat';
+        eval "require $module";
         # Just use a Base chat object (which does nothing) otherwise
         $self->chat( Panky::Chat->new );
     }

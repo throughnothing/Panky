@@ -9,14 +9,18 @@ use ExtUtils::MakeMaker 6.30;
 
 
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "Panky is a chatting, github, and jenkins loving web-app",
+  "ABSTRACT" => "Panky is a chatty, github-and-ci helper bot for your team",
   "AUTHOR" => "William Wolf <throughnothing\@gmail.com>",
   "BUILD_REQUIRES" => {
     "File::Find" => 0,
+    "File::Slurp" => 0,
     "File::Temp" => 0,
+    "Mojo::JSON" => 0,
     "Test::Mojo" => 0,
     "Test::More" => 0,
+    "Test::Most" => 0,
     "strict" => 0,
+    "t::lib::Base" => 0,
     "warnings" => 0
   },
   "CONFIGURE_REQUIRES" => {

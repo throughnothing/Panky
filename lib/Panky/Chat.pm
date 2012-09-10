@@ -7,7 +7,7 @@ sub new {
     my ($self, %args) = @_;
 
     # Make sure we have all required fields
-    for ( @{ $self->required_env } ) {
+    for ( @{ $self->required_env || [] } ) {
         die "$_ Required for Chat!" if !$ENV{$_};
     }
     $self = $self->SUPER::new( %args );

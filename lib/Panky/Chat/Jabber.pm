@@ -38,7 +38,7 @@ sub connect {
         domain => $domain,
         password => $self->password,
         host => $self->host,
-        resource => 'panky-local',
+        resource => 'panky',
     );
 
     # Save the jabber connection to oursef
