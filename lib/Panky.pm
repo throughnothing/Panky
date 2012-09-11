@@ -5,7 +5,7 @@ use Panky::Github::API;
 
 # ABSTRACT: Panky is a chatty, github-and-ci helper bot for your team
 
-has [qw( chat github ci base_url )];
+has [qw( chat ci github base_url )];
 
 my @required_env = qw( PANKY_BASE_URL PANKY_GITHUB_USER PANKY_GITHUB_PWD );
 

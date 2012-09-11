@@ -1,13 +1,21 @@
 package Panky::Chat;
+use Memoize;
 use Mojo::Base -base;
+use Module::Pluggable
+    search_path => [ 'Panky::Chat::Module' ],
+    sub_name => '_plugins',
+    instantiate => 'new';
 
-has 'required_env';
+memoize 'plugins';
+
+has 'required_env' => sub{ [] };
+has [qw( panky nick )];
 
 sub new {
     my ($self, %args) = @_;
 
     # Make sure we have all required fields
-    for ( @{ $self->required_env || [] } ) {
+    for ( @{ $self->required_env } ) {
         die "$_ Required for Chat!" if !$ENV{$_};
     }
     $self = $self->SUPER::new( %args );
@@ -17,6 +25,23 @@ sub new {
 
     return $self;
 }
+
+# Dispatches messages to the loaded plugins
+# type - 'directed_message', 'message'
+# msg - message body
+# from - who the message was from
+sub dispatch {
+    my ($self, $type, $msg, $from) = @_;
+
+    # Plugins come from Module::Pluggable
+    for ( $self->plugins( panky => $self->panky ) ) {
+        # Make sure it can handle this method
+        $_->$type( $msg , $from ) if $_->can( $type );
+    }
+}
+
+# Memoized function to return all plugins from Module::Pluggable
+sub plugins { shift->_plugins( @_ ) }
 
 # Dummy setup function in case a sub-class doesn't need one
 sub setup { }

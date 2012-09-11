@@ -1,7 +1,8 @@
 package Panky::Github;
 use Mojo::Base 'Mojolicious::Controller';
 use Panky::Github::HookPayload qw( parse );
-use Module::Pluggable search_path => ['Panky::Github::HookActor'], require => 1;
+use Module::Pluggable
+    search_path => ['Panky::Github::HookActor'], instantiate => 'new';
 
 # ABSTRACT: Controller that accepts Github Receive-Hooks.
 
@@ -16,7 +17,7 @@ sub hook {
     # Iterate over all hook actors and run their actions
     # Plugins come from Module::Pluggable
     my $method = $pl->type;
-    for ( $self->plugins ) {
+    for ( $self->plugins( panky => $self->app ) ) {
         # Make sure it can handle this method
         next unless $_->can($method);
         $_->$method( $self->app, $pl );

@@ -6,3 +6,5 @@
 * Settings/config for what github events to 'say' in chatroom?
 * Jenkins API Integration
 * Make the '/' page look better (good)
+* Make Chat modules more generic to support more chat-types (irc, etc).
+* More fun Chat Modules/Plugins

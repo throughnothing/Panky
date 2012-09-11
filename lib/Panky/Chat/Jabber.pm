@@ -2,12 +2,11 @@ package Panky::Chat::Jabber;
 use AnyEvent::XMPP::IM::Connection;
 use AnyEvent::XMPP::Ext::Disco;
 use AnyEvent::XMPP::Ext::MUC;
-use Module::Pluggable search_path => [ 'Panky::Chat::Jabber' ], require => 1;
 use Mojo::Base 'Panky::Chat';
 
 # ABSTRACT: Jabber Chat Agent for Panky
 
-has [ qw( host jid password panky room nick muc jc ) ];
+has [ qw( host jid password room muc jc ) ];
 
 has required_env => sub{[qw(
     PANKY_CHAT_JABBER_JID PANKY_CHAT_JABBER_PWD PANKY_CHAT_JABBER_ROOM
@@ -97,17 +96,12 @@ sub _dispatch {
     return if $is_echo || $msg->is_delayed;
 
     my $nick = $self->nick;
-    # private_message if it's private, otherwise, if it's directed TO us
-    # (starts with our name) make it a directed_message, otherwise its
+    # directed_message if it's directed to us, otherwise it's
     # just regular chatter in the chatroom.
-    my $method = $msg->is_private ? 'private_message' :
-                 $msg->body ~~ /^$nick\W/ ? 'directed_message' : 'message';
-    # Plugins come from Module::Pluggable
-    for ( $self->plugins ) {
-        # Make sure it can handle this method
-        next unless $_->can($method);
-        $_->$method( $self->panky, $room, $msg );
-    }
+    my $type = $msg->body ~~ /^$nick\W/ ? 'directed_message' : 'message';
+
+    # Call the dispatcher
+    $self->dispatch( $type, $msg->body, $msg->from_nick );
 }
 
 1;
