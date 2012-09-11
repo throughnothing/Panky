@@ -12,11 +12,11 @@ my @required_env = qw( PANKY_BASE_URL PANKY_GITHUB_USER PANKY_GITHUB_PWD );
 sub startup {
     my ($self) = @_;
 
-    # Create the db if this is the first time the app is run
-    #eval { $self->schema->deploy };
-
     # Make sure we have all required $ENV vars
     !$ENV{$_} ? die "$_ Required!" : 0 for @required_env;
+
+    # Load config
+    my $config = $self->plugin('Config');
 
     # Setup github
     $self->_setup_gh;
