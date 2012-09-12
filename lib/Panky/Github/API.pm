@@ -38,6 +38,16 @@ sub get_commit {
     $self->_req( GET => "/repos/$nwo/commits/$sha" );
 }
 
+sub get_pulls {
+    my ($self, $nwo) = @_;
+    $self->_req( GET => "/repos/$nwo/pulls" );
+}
+
+sub get_pull {
+    my ($self, $nwo, $id) = @_;
+    $self->_req( GET => "/repos/$nwo/pulls/$id" );
+}
+
 sub get_hook {
     my ($self, $hook_url) = @_;
     $self->_req( GET => URI->new( $hook_url )->path );

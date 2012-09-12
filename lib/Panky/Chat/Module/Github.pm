@@ -44,14 +44,26 @@ sub directed_message {
     my $gh = $self->panky->github;
 
     given( $msg ) {
-        # Setup a hook for a repo
         when( /gh setup (\S+)/ ) {
+            # Setup a hook for a repo
             $gh->create_hook( $1 );
             $self->say( "$from: Setup $1!" );
         }
-        # Test the specified hook
         when( /gh test-hooks (\S+)/ ) {
+            # Test the specified hook
             $gh->test_hook( $1 );
+        }
+        when( /pulls (\S+)/ ){
+            # List pull requests for a repo
+            my $prs = $self->panky->github->get_pulls( $1 );
+
+            return $self->say( "No open PRs for $1!" ) unless @$prs;
+
+            for ( @$prs ) {
+                my $url = makeashorterlink( $_->{html_url} );
+                my $title = $_->{title};
+                $self->say( "$title - $url" );
+            }
         }
     }
 }
