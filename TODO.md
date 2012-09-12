@@ -8,7 +8,6 @@
 * Make the '/' page look better (good)
 * Make Chat modules more generic to support more chat-types (irc, etc).
 * More fun Chat Modules/Plugins
-    - Generic GitHubShortener - shorten all github.com/ urls it sees
 * HookActor that aggregates all types of certain actions daily/weekly/monthly?
     - 'gh activity today' would maybe show PRs closed for the day, etc.
 * Git Deploy/Merge Support
