@@ -6,7 +6,7 @@ use Mojo::Base 'Panky::Chat';
 
 # ABSTRACT: Jabber Chat Agent for Panky
 
-has [ qw( host jid password room muc jc ) ];
+has [ qw( host jid password room muc jc resource ) ];
 
 has required_env => sub{[qw(
     PANKY_CHAT_JABBER_JID PANKY_CHAT_JABBER_PWD PANKY_CHAT_JABBER_ROOM
@@ -20,6 +20,9 @@ sub setup {
     $self->password( $self->password // $ENV{PANKY_CHAT_JABBER_PWD} );
     $self->room( $self->room // $ENV{PANKY_CHAT_JABBER_ROOM} );
     $self->host( $self->host // $ENV{PANKY_CHAT_JABBER_HOST} );
+    $self->resource(
+        $self->resource // $ENV{PANKY_CHAT_JABBER_RESOURCE} // 'panky'
+    );
 }
 
 sub connect {
@@ -37,7 +40,7 @@ sub connect {
         domain => $domain,
         password => $self->password,
         host => $self->host,
-        resource => 'panky',
+        resource => $self->resource,
     );
 
     # Save the jabber connection to oursef
