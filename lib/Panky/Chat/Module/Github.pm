@@ -7,33 +7,41 @@ use WWW::Shorten 'GitHub';
 
 sub message {
     my ($self, $msg, $from) = @_;
+    my $gh = $self->panky->github;
 
     # Detect links to github
     if( $msg =~ qr{(https?://github.com/(\S+))} ) {
         my @parts = split qr{/}, $2, 5;
+        my $nwo = join '/', @parts[0,1];
 
-        my $type;
+        my ( $type, $user, $body ) = ('', '', '');
         given( \@parts ) {
             # When its a commit
             when ( @$_ > 2 and $_->[2] eq 'commit' ){
-                $type = substr( $parts[3], 0, 6)
+                my $sha = $type = substr( $parts[3], 0, 6);
+                my $commit = $gh->get_commit( $nwo, $sha );
+                # Get the first line only
+                $body = ( split /\n/, $commit->{commit}{message} )[0];
+                $user = $commit->{author}{login};
             }
             # When its a pull request
             when ( @$_ > 2 and $_->[2] eq 'pull' ) {
                 $type = "PR-$_->[3]";
+                my $pr = $gh->get_pull( $nwo, $_->[3] );
+                $body = $pr->{title};
+                $user = $pr->{user}{login};
             }
             # When its a blob or a tree
             when ( @$_ > 2 and ( $_->[2] eq 'blob' || $_->[2] eq 'tree' ) ) {
-                $type = "($_->[3])/$_->[4]";
+                $type = $_->[3];
+                $body = "/$_->[4]";
             }
         }
 
-        # Shorten found github links
-        my $link = makeashorterlink( $1 );
-
         # Format message
+        $user = "($user)" if $user;
         $type = $type ? " $type" : '';
-        my $msg = "[$parts[0]/$parts[1]$type] $link";
+        my $msg = "[$nwo$type]$user $body";
 
         $self->say( $msg );
     }
