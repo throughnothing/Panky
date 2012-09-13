@@ -12,3 +12,4 @@
     - 'gh activity today' would maybe show PRs closed for the day, etc.
 * Git Deploy/Merge Support
     - 'panky deploy blah blah blah' to deploy stuff
+* Integrate with JIRA API's
