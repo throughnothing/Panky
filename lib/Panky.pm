@@ -35,6 +35,18 @@ sub startup {
 
     # Github Hooks point here
     $r->post('/_github')->to('github#hook');
+
+    # Jenkins postbacks go here.
+    # They should be set up with curl in a post-build task script
+    # https://wiki.jenkins-ci.org/display/JENKINS/Post+build+task
+    # and they need the following parameters:
+    #   - repo = github_user/repo
+    #   - sha = the sha hash of the commit that was tested by Jenkins
+    #   - status = success/failure
+    #   - job_name = jenkins job name (from $JOB_NAME)
+    #   - job_number = jenkins job number (from $JOB_NUMBer)
+    #   - branch = git branch name
+    $r->post('/_jenkins')->to('jenkins#hook');
 }
 
 sub _setup_chat {
@@ -71,7 +83,13 @@ sub _setup_ci {
     my ($self) = @_;
 
     # TODO: This does nothing so far
-    $self->ci( Panky::CI::Jenkins->new );
+    $self->ci(
+        Panky::CI::Jenkins->new(
+            base_url => $ENV{PANKY_JENKINS_URL},
+            user => $ENV{PANKY_JENKINS_USER},
+            token => $ENV{PANKY_JENKINS_TOKEN},
+        )
+    );
 }
 
 1;
@@ -120,6 +138,12 @@ The username of a Github user that will have access to whatever is needed.
 The Github password for the user mentioned above.
 
 =back
+
+You can also give it the C<URL> to your L<Jenkins|http://jenkins-ci.org> server
+via the C<PANKY_JENKINS_URL> option.  L<Panky> will use this to generate
+links to Jenkins builds, etc.  If you want L<Panky> to be able to start builds
+on jenkins (from pull requests etc.) you should pass C<PANKY_JENKINS_USER> and
+C<PANKY_JENKINS_TOKEN>.
 
 Optionally, you can also provide chat parameters to have L<Panky> connect to
 jabber:

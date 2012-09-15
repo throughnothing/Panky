@@ -20,7 +20,7 @@ sub hook {
     for ( $self->plugins( panky => $self->app ) ) {
         # Make sure it can handle this method
         next unless $_->can($method);
-        $_->$method( $self->app, $pl );
+        $_->$method( $pl );
     }
 
     # It seems like I have to render something for this route to work
