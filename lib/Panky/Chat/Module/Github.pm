@@ -40,8 +40,7 @@ sub message {
 
         # Format message
         $user = "($user)" if $user;
-        $type = $type ? " $type" : '';
-        my $msg = "[$nwo$type]$user $body";
+        my $msg = "[$type]$user $body";
 
         $self->say( $msg );
     }
