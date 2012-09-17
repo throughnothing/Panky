@@ -16,7 +16,7 @@ sub notification {
     my $build_url = $self->_get_build_url( $payload );
 
     # If branch looks like a sha hash, do a substr of it
-    $branch = substr($branch, 0, 6) if length($branch) == 42;
+    $branch = substr($branch, 0, 6) if length($branch) == 40;
 
     # Comment on the PR if we can
     $self->_update_status( $payload );
