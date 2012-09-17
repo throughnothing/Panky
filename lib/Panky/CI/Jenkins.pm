@@ -33,7 +33,6 @@ sub _req {
     $self->ua->$method( $base . $path, $data )->res;
 }
 
-
 1;
 
 =head1 SYNOPSIS

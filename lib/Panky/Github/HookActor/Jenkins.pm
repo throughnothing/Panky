@@ -25,3 +25,35 @@ sub pull_request {
 }
 
 1
+
+=head1 SYNOPSIS
+
+This C<HookActor> performs tasks on L<Jenkins|http://jenkins-ci.org> when
+certain github hooks are received.
+
+Currently, it can perform jenkins builds on Github Pull Request actions.  In
+order for this to work, you must setup a mapping of github repositories to
+their respective jenkins jobs.  This can be done in your panky conf like this:
+
+    {
+       Github => {
+            HookActor => {
+                Jenkins => {
+                    'user/repo1' => {
+                        job => 'Jenkins-Job-Name',
+                    },
+                    'user/repo2' => {
+                        job => 'Other-Jenkins-Job',
+                    },
+                }
+            },
+        },
+    }
+
+Additionally, your Jenkins jobs need to be set up as a 'parameterized' build,
+accepting one parameter called C<HEAD> which accepts the sha1 hash of the commit
+that should be tested.  Then, the "Branch Specifier" under the "Git" option
+needs to be set to C<${HEAD}> for it to use the parameter we pass in.
+
+That's it!
+
