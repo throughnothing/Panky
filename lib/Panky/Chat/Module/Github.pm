@@ -42,7 +42,7 @@ sub message {
         $user = "($user)" if $user;
         my $msg = "[$type]$user $body";
 
-        $self->say( $msg );
+        $self->say( $msg ) if $type && $body;
     }
 }
 
