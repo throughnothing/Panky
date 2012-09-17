@@ -24,7 +24,7 @@ sub pull_request {
     $self->panky->github->set_status( $nwo, $sha, 'pending', $url );
 }
 
-1
+1;
 
 =head1 SYNOPSIS
 

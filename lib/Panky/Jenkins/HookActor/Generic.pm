@@ -1,8 +1,15 @@
 package Panky::Jenkins::HookActor::Generic;
-use Data::Dumper;
 use Mojo::Base 'Panky::Jenkins::HookActor';
 
 # ABSTRACT: Generic actor to act upon Github Hook postbacks
+
+has default_config => sub {{
+    comment_on_prs => 0,
+    comment_in_chat => {
+        success => 0,
+        failure => 1,
+    }
+}};
 
 sub notification {
     my ($self, $payload) = @_;
@@ -12,7 +19,7 @@ sub notification {
     my $name = $payload->{job_name};
     my $branch = $payload->{branch};
     my $sha = $payload->{sha};
-    my $status = $payload->{status} || 'failed';
+    my $status = $self->_get_status( $payload->{status} );
     my $build_url = $self->_get_build_url( $payload );
 
     # If branch looks like a sha hash, do a substr of it
@@ -21,9 +28,10 @@ sub notification {
     # Comment on the PR if we can
     $self->_update_status( $payload );
 
-    # Set the comment_in_chat config option to 1 to have
-    # Panky announce build statuses in chat
-    if ($self->config->{comment_in_chat}) {
+    # Check if comment_in_chat config option is set to 1, or
+    # if the specific status is set to 1
+    my $c_in_chat = $self->config->{comment_in_chat};
+    if ( $c_in_chat == 1 || ( $c_in_chat || {} )->{$status} ) {
         $chat->say( "[Jenkins: $name ($branch)] $status $build_url" );
     }
 }
@@ -73,5 +81,7 @@ sub _get_build_url {
     my ($name, $build) = ($payload->{job_name}, $payload->{job_number});
     return $self->panky->ci->base_url . "job/$name/$build";
 }
+
+sub _get_status { lc( $_[1] ? $_[1] : 'failure' ) }
 
 1;

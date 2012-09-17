@@ -16,16 +16,16 @@ sub startup {
     !$ENV{$_} ? die "$_ Required!" : 0 for @required_env;
 
     # Load config
-    my $config = $self->plugin('Config');
+    $self->plugin('Config');
 
     # Setup github
-    $self->_setup_gh;
+    $self->_setup_github unless $self->github;
 
     # Setup our Chat Bot
-    $self->_setup_chat;
+    $self->_setup_chat unless $self->chat;
 
     # Setup Jenkins
-    $self->_setup_ci;
+    $self->_setup_ci unless $self->ci;
 
     # Set up our routes
     my $r = $self->routes;
@@ -66,7 +66,7 @@ sub _setup_chat {
     }
 }
 
-sub _setup_gh {
+sub _setup_github {
     my ($self) = @_;
 
     # Initialize GitHub API
