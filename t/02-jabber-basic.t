@@ -1,9 +1,8 @@
-use Mojo::Base 't::lib::Base';
 use Test::Most tests => 7;
 
 use Panky::Chat::Jabber;
 
-my $jm = "Panky::Chat::Jabber";
+my $jm = 'Panky::Chat::Jabber';
 
 my @required = qw(
     PANKY_CHAT_JABBER_JID

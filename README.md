@@ -47,6 +47,12 @@ The username of a Github user that will have access to whatever is needed.
 
 The Github password for the user mentioned above.
 
+You can also give it the `URL` to your [Jenkins](http://jenkins-ci.org) server
+via the `PANKY_JENKINS_URL` option.  [Panky](http://search.cpan.org/perldoc?Panky) will use this to generate
+links to Jenkins builds, etc.  If you want [Panky](http://search.cpan.org/perldoc?Panky) to be able to start builds
+on jenkins (from pull requests etc.) you should pass `PANKY_JENKINS_USER` and
+`PANKY_JENKINS_TOKEN`.
+
 Optionally, you can also provide chat parameters to have [Panky](http://search.cpan.org/perldoc?Panky) connect to
 jabber:
 

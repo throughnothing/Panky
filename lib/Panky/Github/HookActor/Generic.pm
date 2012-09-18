@@ -16,7 +16,7 @@ has default_config => sub {{
 
 # Called when a 'push' hook is received
 sub push {
-    my ($self, $panky, $payload) = @_;
+    my ($self, $payload) = @_;
 
     # Do nothing if we are configured not to
     return unless ( $self->config->{push} );
@@ -28,12 +28,12 @@ sub push {
     my $user = $payload->commits->[0]->{author}{username};
     my $url = $self->shorten( $payload->commits->[0]->{url} );
 
-    $panky->chat->say( "[$name/$branch]($user) $head: $msg $url" );
+    $self->panky->chat->say( "[$name/$branch]($user) $head: $msg $url" );
 }
 
 # Called when a 'commit_comment' hook is received
 sub commit_comment {
-    my ($self, $panky, $payload) = @_;
+    my ($self, $payload) = @_;
 
     # Do nothing if we are configured not to
     return unless ( $self->config->{commit_comment} );
@@ -43,12 +43,12 @@ sub commit_comment {
     my $file = $payload->comment->path;
     my $user = $payload->comment->user->login;
 
-    $panky->chat->say( "$user commented on $file in $name: $msg" );
+    $self->panky->chat->say( "$user commented on $file in $name: $msg" );
 }
 
 # Called when a 'pull_request' hook is received
 sub pull_request {
-    my ($self, $panky, $payload) = @_;
+    my ($self, $payload) = @_;
 
     # Do nothing if we are configured not to
     my $c = $self->config->{pull_request};
@@ -67,9 +67,7 @@ sub pull_request {
         return unless $c->{$action};
     }
 
-    $panky->chat->say(
-        "[$name] PR '$title' $action by $user $url"
-    );
+    $self->panky->chat->say("[$name] PR '$title' $action by $user $url");
 }
 
 1;
