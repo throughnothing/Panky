@@ -60,11 +60,13 @@ sub directed_message {
             # Test the specified hook
             $gh->test_hook( $1 );
         }
-        when( /pulls (\S+)/ ){
+        when( /gh prs (\S+)/ ){
+            my $repo = $self->_get_repo( $1 );
             # List pull requests for a repo
-            my $prs = $self->panky->github->get_pulls( $1 );
+            my $prs = $self->panky->github->get_pulls( $repo );
 
-            return $self->say( "No open PRs for $1!" ) unless @$prs;
+            return $self->say( "No open PRs for $repo!" )
+                unless ref $prs eq 'ARRAY';
 
             for ( @$prs ) {
                 my $url = makeashorterlink( $_->{html_url} );
@@ -72,7 +74,75 @@ sub directed_message {
                 $self->say( "$title - $url" );
             }
         }
+        when ( /gh set repo (\S+) => (\S+)/ ) {
+            # Add a repo mapping
+            $self->_set_repo_alias( $1, $2 );
+            $self->say( "$from: got it!" );
+        }
+        when ( /gh unset repo (\S+)/ ) {
+            # Remove a repo mapping
+            $self->_unset_repo_alias( $1 );
+            $self->say( "$from: repo alias removed!" );
+        }
+        when ( /gh show repo (\S+)/ ) {
+            # Show a repo mapping
+            my $repo = $self->_get_repo( $1, $2 );
+            $repo = ($repo eq $1) ? 'none' : $repo;
+            $self->say( "$from: $1 => $repo" );
+        }
+        when ( /test (\S+) (pr \d+|([0-9a-f]{5,40}))/ ) {
+            # Match retesting a pr or a hash
+            my $repo = $self->_get_repo( $1 );
+
+            # See if we have a Jenkins Build for this repo
+            my $job_name = $self->panky->ci->job_for_repo( $repo );
+            return $self->say( "No jobs found for $repo!" ) unless $job_name;
+
+            my $sha = $2;
+            # If we were given a PR, we must get the head sha1 of it
+            if( $sha ~~ /^pr (\d+)/ ) {
+                my $pr_num = $1;
+                my $pr = $self->panky->github->get_pull( $repo, $pr_num );
+                unless ( $pr && $pr->{head} && $pr->{head}{sha} ){
+                    return $self->say("$from: Error getting $repo PR $pr_num!");
+                }
+                $sha = $pr->{head}{sha};
+            }
+
+            my $short_sha = substr $sha, 0, 6;
+            $self->panky->ci->build( $job_name, $sha );
+            $self->say( "testing $repo $short_sha ($job_name)...");
+        }
     }
+}
+
+# Get the full repo name.
+# Will return the repo name from an alias if set, otherwise it will return
+# whatever was passed in
+sub _get_repo {
+    my ($self, $name) = @_;
+    return unless $name;
+    ($self->storage->get( 'repo_aliases' ) || {})->{$name} || $name;
+}
+
+# Set an alias in storage for a repo
+sub _set_repo_alias {
+    my ($self, $alias, $repo) = @_;
+    return unless $alias && $repo;
+
+    my $aliases = $self->storage->get( 'repo_aliases' ) || {};
+    $aliases->{ $alias } = $repo;
+    $self->storage->put( 'repo_aliases' => $aliases )
+}
+
+# Remove an alias in storage for a repo
+sub _unset_repo_alias {
+    my ($self, $alias) = @_;
+    return unless $alias;
+
+    my $aliases = $self->storage->get( 'repo_aliases' ) || {};
+    delete $aliases->{ $alias };
+    $self->storage->put( 'repo_aliases' => $aliases )
 }
 
 1;

@@ -85,6 +85,7 @@ sub _setup_ci {
     # TODO: This does nothing so far
     $self->ci(
         Panky::CI::Jenkins->new(
+            panky => $self,
             base_url => $ENV{PANKY_JENKINS_URL},
             user => $ENV{PANKY_JENKINS_USER},
             token => $ENV{PANKY_JENKINS_TOKEN},
