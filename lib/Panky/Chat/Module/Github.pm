@@ -110,8 +110,12 @@ sub directed_message {
             }
 
             my $short_sha = substr $sha, 0, 6;
+            # Start a build on CI
             $self->panky->ci->build( $job_name, $sha );
-            $self->say( "testing $repo $short_sha ($job_name)...");
+            # Update github status to pending
+            $gh->set_status( $repo, $sha, 'pending' );
+
+            $self->say( "$from: Testing $repo $short_sha ($job_name)...");
         }
     }
 }
