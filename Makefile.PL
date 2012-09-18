@@ -9,7 +9,7 @@ use ExtUtils::MakeMaker 6.30;
 
 
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "Panky is a chatty, github-and-ci helper bot for your team",
+  "ABSTRACT" => "Panky is a chatty, github, issue, and-ci helper bot for your team",
   "AUTHOR" => "William Wolf <throughnothing\@gmail.com>",
   "BUILD_REQUIRES" => {
     "File::Find" => 0,
