@@ -1,11 +1,12 @@
 package Panky;
 use Mojo::Base 'Mojolicious';
+use JIRA::Client::REST 0.06;
 use Panky::CI::Jenkins;
 use Panky::Github::API;
 
 # ABSTRACT: Panky is a chatty, github-and-ci helper bot for your team
 
-has [qw( chat ci github base_url )];
+has [qw( chat ci github base_url jira )];
 
 my @required_env = qw( PANKY_BASE_URL PANKY_GITHUB_USER PANKY_GITHUB_PWD );
 
@@ -26,6 +27,9 @@ sub startup {
 
     # Setup Jenkins
     $self->_setup_ci unless $self->ci;
+
+    # Setup JIRA
+    $self->_setup_jira unless $self->jira;
 
     # Set up our routes
     my $r = $self->routes;
@@ -82,13 +86,30 @@ sub _setup_github {
 sub _setup_ci {
     my ($self) = @_;
 
-    # TODO: This does nothing so far
     $self->ci(
         Panky::CI::Jenkins->new(
             panky => $self,
             base_url => $ENV{PANKY_JENKINS_URL},
             user => $ENV{PANKY_JENKINS_USER},
             token => $ENV{PANKY_JENKINS_TOKEN},
+        )
+    );
+}
+
+sub _setup_jira {
+    my ($self) = @_;
+    # Return unless we have the needed variables
+    unless( $ENV{PANKY_JIRA_URL} &&
+            $ENV{PANKY_JIRA_USER} && $ENV{PANKY_JIRA_PWD} ){
+        print STDERR "Not loading jira b/c env vars were not set...";
+        return;
+    }
+
+    $self->jira(
+        JIRA::Client::REST->new(
+            username => $ENV{PANKY_JIRA_USER},
+            password => $ENV{PANKY_JIRA_PWD},
+            url => $ENV{PANKY_JIRA_URL},
         )
     );
 }

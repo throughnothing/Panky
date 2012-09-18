@@ -52,7 +52,7 @@ sub _set_repo_job {
 sub _unset_repo_job {
     my ($self, $repo) = @_;
     return unless $repo;
-    my $repo = lc($repo);
+    $repo = lc($repo);
 
     my $repos = $self->panky->ci->storage->get( 'repo_jobs' ) || {};
     delete $repos->{ $repo };

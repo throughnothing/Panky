@@ -38,6 +38,7 @@ my %WriteMakefileArgs = (
     "Hash::AsObject" => 0,
     "Hash::Merge::Simple" => 0,
     "IO::Socket::SSL" => "1.76",
+    "JIRA::Client::REST" => "0.06",
     "Memoize" => 0,
     "Module::Pluggable" => 0,
     "Mojo::Base" => 0,
