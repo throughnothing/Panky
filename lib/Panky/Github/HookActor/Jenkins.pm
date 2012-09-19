@@ -11,7 +11,9 @@ sub pull_request {
     return if ($payload->action || 'closed') eq 'closed';
 
     my $nwo = $payload->repository->full_name;
-    return "No related Jenkins Job found" unless $nwo;
+    # Check if we have a CI job for this repo
+    $nwo = $self->panky->ci->job_for_repo( $nwo );
+    return "No related CI Job found" unless $nwo;
 
     # Get the sha1 hash of HEAD for the branch being PR'ed
     my $sha = $payload->pull_request->head->sha;
