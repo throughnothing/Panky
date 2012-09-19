@@ -1,5 +1,7 @@
 # TODO
 
+* Use CHI (with Redis) instead of DBM::Deep since the DBM::Deep files
+  are lost on Heroku restart.
 * Allow 'retesting' of pull requests by saying 'retest' etc...
 * Github Hook Secret Signing Support (`hub.secret` on
     [Repo * Hooks](http://developer.github.com/v3/repos/hooks/))

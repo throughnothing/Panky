@@ -1,5 +1,6 @@
 *~
 *.swp
+run.sh
 blib
 Makefile
 Makefile.old
