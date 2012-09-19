@@ -8,6 +8,8 @@ version 0.001
 
 # SYNOPSIS
 
+[![Build Status](https://secure.travis-ci.org/throughnothing/Panky.png?branch=master)](http://travis-ci.org/throughnothing/Panky)
+
 Panky is a chatting, github, Jira, jenkins loving
 web-app/bot/do-it-all/chef(?) for your team.
 

@@ -165,6 +165,8 @@ sub _setup_jira {
 
 =head1 SYNOPSIS
 
+[![Build Status](https://secure.travis-ci.org/throughnothing/Panky.png?branch=master)](http://travis-ci.org/throughnothing/Panky)
+
 Panky is a chatting, github, Jira, jenkins loving
 web-app/bot/do-it-all/chef(?) for your team.
 
