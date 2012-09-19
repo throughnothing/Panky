@@ -1,6 +1,7 @@
 package Panky;
 use Mojo::Base 'Mojolicious';
 use Mojo::JSON;
+use Mojo::Log;
 use Mojo::URL;
 use JIRA::Client::REST 0.06;
 use Panky::CI::Jenkins;
@@ -11,6 +12,7 @@ use Panky::Schema;
 
 has [qw( chat ci github base_url jira schema )];
 has json => sub { Mojo::JSON->new };
+has log => sub { Mojo::Log->new };
 
 my @required_env = qw( PANKY_BASE_URL PANKY_GITHUB_USER PANKY_GITHUB_PWD );
 
@@ -78,7 +80,7 @@ sub _setup_storage {
 
     my( $dsn, $user, $pass );
     if( $ENV{DATABASE_URL} ) {
-        print STDERR "Using Postgres database... $ENV{DATABASE_URL}";
+        $self->log->info( "Using Postgres database... $ENV{DATABASE_URL}" );
         # If postgres database_url is setup
         my $url = Mojo::URL->new( $ENV{DATABASE_URL} );
         my $dbname = $url->path =~ s{/}{}gr;
@@ -86,15 +88,16 @@ sub _setup_storage {
         $dsn = "dbi:Pg:dbname=$dbname;host=$host;port=$port";
         ($user, $pass) = split /:/, $url->userinfo, 2
     } else {
-        print STDERR "Using SQLite database...";
+        $self->log->info( "Using SQLite database..." );
         # Otherwise we fall back to sqlite (which will be temporary in Heroku)
-        $dsn = "dbi:SQLite:./temp.db";
+        my $file = $ENV{SQLITE_FILE} || ":memory:";
+        $dsn = "dbi:SQLite:$file";
     }
 
     # Connect to the DB
     $self->schema( Panky::Schema->connect( $dsn, $user, $pass ) );
     eval { $self->schema->deploy };
-    print STDERR $@ if $@;
+    $self->log->warn( $@ ) if $@;
 }
 
 sub _setup_chat {
@@ -145,7 +148,7 @@ sub _setup_jira {
     # Return unless we have the needed variables
     unless( $ENV{PANKY_JIRA_URL} &&
             $ENV{PANKY_JIRA_USER} && $ENV{PANKY_JIRA_PWD} ){
-        print STDERR "Not loading jira b/c env vars were not set...";
+        $self->log->info( "Not loading jira b/c env vars were not set..." );
         return;
     }
 

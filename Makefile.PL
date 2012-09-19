@@ -43,6 +43,7 @@ my %WriteMakefileArgs = (
     "Module::Pluggable" => 0,
     "Mojo::Base" => 0,
     "Mojo::JSON" => 0,
+    "Mojo::Log" => 0,
     "Mojo::URL" => 0,
     "Mojo::UserAgent" => 0,
     "Mojo::Util" => 0,

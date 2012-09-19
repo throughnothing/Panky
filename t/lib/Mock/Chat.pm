@@ -5,12 +5,13 @@ use Panky::Chat::Module;
 has 'module';
 has sayings => sub { [ ] };
 
-sub plugins {
-    my $self = shift;
+# Used to send fake messages to the chat
+sub tell {
+    my ($self, $msg, %args) = @_;
+    $args{type} //= 'directed_message';
+    $args{from} //= 'test-user';
 
-    # Store the module in here so we can look at it
-    $self->module( Panky::Chat::Module->new( @_ ) );
-    return ( $self->module );
+    $self->dispatch( $args{type}, $msg, $args{from});
 }
 
 # Push calls to 'sayings' for inspection
