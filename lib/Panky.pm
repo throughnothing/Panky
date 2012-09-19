@@ -1,12 +1,16 @@
 package Panky;
 use Mojo::Base 'Mojolicious';
+use Mojo::JSON;
+use Mojo::URL;
 use JIRA::Client::REST 0.06;
 use Panky::CI::Jenkins;
 use Panky::Github::API;
+use Panky::Schema;
 
 # ABSTRACT: Panky is a chatty, github, issue, and-ci helper bot for your team
 
-has [qw( chat ci github base_url jira )];
+has [qw( chat ci github base_url jira schema )];
+has json => sub { Mojo::JSON->new };
 
 my @required_env = qw( PANKY_BASE_URL PANKY_GITHUB_USER PANKY_GITHUB_PWD );
 
@@ -18,6 +22,9 @@ sub startup {
 
     # Load config
     $self->plugin('Config');
+
+    # Setup storage
+    $self->_setup_storage;
 
     # Setup github
     $self->_setup_github unless $self->github;
@@ -51,6 +58,43 @@ sub startup {
     #   - job_number = jenkins job number (from $JOB_NUMBer)
     #   - branch = git branch name
     $r->post('/_jenkins')->to('jenkins#hook');
+}
+
+sub storage_get {
+    my ($self, $key) = @_;
+    my $res = $self->schema->resultset('Obj')->find( $key );
+    return $res ? $self->json->decode( $res->value ) : undef;
+}
+
+sub storage_put {
+    my ($self, $key, $val) = @_;
+    $self->schema->resultset('Obj')->update_or_create({
+        key => $key, value => $self->json->encode( $val ),
+    });
+}
+
+sub _setup_storage {
+    my ($self) = @_;
+
+    my( $dsn, $user, $pass );
+    if( $ENV{DATABASE_URL} ) {
+        print STDERR "Using Postgres database... $ENV{DATABASE_URL}";
+        # If postgres database_url is setup
+        my $url = Mojo::URL->new( $ENV{DATABASE_URL} );
+        my $dbname = $url->path =~ s{/}{}gr;
+        my ($host, $port) = ($url->host, $url->port);
+        $dsn = "dbi:Pg:dbname=$dbname;host=$host;port=$port";
+        ($user, $pass) = split /:/, $url->userinfo, 2
+    } else {
+        print STDERR "Using SQLite database...";
+        # Otherwise we fall back to sqlite (which will be temporary in Heroku)
+        $dsn = "dbi:SQLite:./temp.db";
+    }
+
+    # Connect to the DB
+    $self->schema( Panky::Schema->connect( $dsn, $user, $pass ) );
+    eval { $self->schema->deploy };
+    print STDERR $@ if $@;
 }
 
 sub _setup_chat {
@@ -242,6 +286,8 @@ the L<Perloku|https://github.com/judofyr/perloku> buildpack.
     $ git clone https://github.com/throughnothing/Panky
     $ cd Panky
     $ heroku create -s cedar --buildpack http://github.com/judofyr/perloku.git
+    # Optionally, if you want persistent storage across app restarts
+    $ heroku addons:add heroku-postgresql(:dev)
 
 Now your heroku app is setup and ready to receive the L<Panky> application.
 Before you push L<Panky> to your app, you'll want to setup the environment
@@ -256,6 +302,11 @@ Once all of that is set up, you can deploy the app using:
     $ git push heroku master
 
 This will deploy your app code, install all dependencies, and run it.
+
+If you have the PostgreSQL addon enabled, L<Pany> will detect the
+C<DATABASE_URL> environment variable present, and use the PostgreSQL server,
+otherwise it falls back to sqlite storage, which will get lost whenever
+you restart your app.
 
 =head1 USAGE
 

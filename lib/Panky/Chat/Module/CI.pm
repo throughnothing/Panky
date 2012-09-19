@@ -34,7 +34,7 @@ sub _get_job {
     return unless $repo;
 
     $repo = lc($repo);
-    ($self->panky->ci->storage->get( 'repo_jobs' ) || {})->{$repo} || $repo;
+    ($self->panky->storage_get( 'repo_jobs' ) || {})->{$repo} || $repo;
 }
 
 # Set a job name in storage for a repo
@@ -43,9 +43,9 @@ sub _set_repo_job {
     return unless $repo && $repo;
     $repo = lc($repo);
 
-    my $repos = $self->panky->ci->storage->get( 'repo_jobs' ) || {};
+    my $repos = $self->panky->storage_get( 'repo_jobs' ) || {};
     $repos->{ $repo } = $job;
-    $self->panky->ci->storage->put( 'repo_jobs' => $repos )
+    $self->panky->storage_put( 'repo_jobs' => $repos )
 }
 
 # Remove a job name in storage for a repo
@@ -54,9 +54,9 @@ sub _unset_repo_job {
     return unless $repo;
     $repo = lc($repo);
 
-    my $repos = $self->panky->ci->storage->get( 'repo_jobs' ) || {};
+    my $repos = $self->panky->storage_get( 'repo_jobs' ) || {};
     delete $repos->{ $repo };
-    $self->panky->ci->storage->put( 'repo_jobs' => $repos )
+    $self->panky->storage_put( 'repo_jobs' => $repos )
 }
 
 1;

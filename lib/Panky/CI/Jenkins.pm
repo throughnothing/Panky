@@ -1,5 +1,4 @@
 package Panky::CI::Jenkins;
-use DBM::Deep;
 use Mojo::Base -base;
 use Mojo::JSON;
 use Mojo::UserAgent;
@@ -7,7 +6,6 @@ use Mojo::Util qw( url_escape );
 
 # ABSTRACT: Panky::CI Object for interacting with Jenkins
 
-has storage => sub { DBM::Deep->new( 'panky_ci_jenkins.db' ) };
 has [qw( panky base_url user token )];
 has json => sub { Mojo::JSON->new };
 has ua => sub { Mojo::UserAgent->new };
@@ -43,7 +41,7 @@ sub job_for_repo {
     my ($self, $repo) = @_;
     $repo = lc($repo);
 
-    my $repos = $self->storage->get( 'repo_jobs' ) || {};
+    my $repos = $self->panky->storage_get( 'repo_jobs' ) || {};
     return $repos->{$repo};
 }
 

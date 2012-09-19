@@ -126,7 +126,7 @@ sub directed_message {
 sub _get_repo {
     my ($self, $name) = @_;
     return unless $name;
-    ($self->storage->get( 'repo_aliases' ) || {})->{$name} || $name;
+    ($self->panky->storage_get( 'repo_aliases' ) || {})->{$name} || $name;
 }
 
 # Set an alias in storage for a repo
@@ -134,9 +134,9 @@ sub _set_repo_alias {
     my ($self, $alias, $repo) = @_;
     return unless $alias && $repo;
 
-    my $aliases = $self->storage->get( 'repo_aliases' ) || {};
+    my $aliases = $self->panky->storage_get( 'repo_aliases' ) || {};
     $aliases->{ $alias } = $repo;
-    $self->storage->put( 'repo_aliases' => $aliases )
+    $self->panky->storage_put( 'repo_aliases' => $aliases )
 }
 
 # Remove an alias in storage for a repo
@@ -144,9 +144,9 @@ sub _unset_repo_alias {
     my ($self, $alias) = @_;
     return unless $alias;
 
-    my $aliases = $self->storage->get( 'repo_aliases' ) || {};
+    my $aliases = $self->panky->storage_get( 'repo_aliases' ) || {};
     delete $aliases->{ $alias };
-    $self->storage->put( 'repo_aliases' => $aliases )
+    $self->panky->storage_put( 'repo_aliases' => $aliases )
 }
 
 1;

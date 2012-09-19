@@ -123,6 +123,8 @@ the [Perloku](https://github.com/judofyr/perloku) buildpack.
     $ git clone https://github.com/throughnothing/Panky
     $ cd Panky
     $ heroku create -s cedar --buildpack http://github.com/judofyr/perloku.git
+    # Optionally, if you want persistent storage across app restarts
+    $ heroku addons:add heroku-postgresql(:dev)
 
 Now your heroku app is setup and ready to receive the [Panky](http://search.cpan.org/perldoc?Panky) application.
 Before you push [Panky](http://search.cpan.org/perldoc?Panky) to your app, you'll want to setup the environment
@@ -137,6 +139,11 @@ Once all of that is set up, you can deploy the app using:
     $ git push heroku master
 
 This will deploy your app code, install all dependencies, and run it.
+
+If you have the PostgreSQL addon enabled, [Pany](http://search.cpan.org/perldoc?Pany) will detect the
+`DATABASE_URL` environment variable present, and use the PostgreSQL server,
+otherwise it falls back to sqlite storage, which will get lost whenever
+you restart your app.
 
 # USAGE
 
