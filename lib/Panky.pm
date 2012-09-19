@@ -12,7 +12,7 @@ use Panky::Schema;
 
 has [qw( chat ci github base_url jira schema )];
 has json => sub { Mojo::JSON->new };
-has log => sub { Mojo::Log->new };
+has log => sub { Mojo::Log->new( level => $ENV{PANKY_LOG_LEVEL} || 'warn' ) };
 
 my @required_env = qw( PANKY_BASE_URL PANKY_GITHUB_USER PANKY_GITHUB_PWD );
 
@@ -80,7 +80,7 @@ sub _setup_storage {
 
     my( $dsn, $user, $pass );
     if( $ENV{DATABASE_URL} ) {
-        $self->log->info( "Using Postgres database... $ENV{DATABASE_URL}" );
+        $self->log->info( "Using Postgres database storage" );
         # If postgres database_url is setup
         my $url = Mojo::URL->new( $ENV{DATABASE_URL} );
         my $dbname = $url->path =~ s{/}{}gr;
@@ -88,7 +88,7 @@ sub _setup_storage {
         $dsn = "dbi:Pg:dbname=$dbname;host=$host;port=$port";
         ($user, $pass) = split /:/, $url->userinfo, 2
     } else {
-        $self->log->info( "Using SQLite database..." );
+        $self->log->info( "Using SQLite database storage" );
         # Otherwise we fall back to sqlite (which will be temporary in Heroku)
         my $file = $ENV{SQLITE_FILE} || ":memory:";
         $dsn = "dbi:SQLite:$file";
@@ -106,11 +106,13 @@ sub _setup_chat {
     my $module = 'Panky::Chat::' . ($ENV{PANKY_CHAT} || 'Jabber');
     # If PANKY_CHAT is set, or we've set a Jabber JID
     if( $ENV{PANKY_CHAT} || $ENV{PANKY_CHAT_JABBER_JID} ) {
+        $self->log->info( "Using $module for chat" );
         eval "require $module";
         # Create Jabber Chat object
         $self->chat( $module->new( panky => $self )->connect );
     } else {
         $module = 'Panky::Chat';
+        $self->log->info( "Using dummy $module for chat" );
         eval "require $module";
         # Just use a Base chat object (which does nothing) otherwise
         $self->chat( Panky::Chat->new );
