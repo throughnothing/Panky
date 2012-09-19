@@ -32,12 +32,16 @@ Some sample usage:
     > panky: gh setup repo1/user1
     # Panky sets up github hooks for itself for that repo
 
-    # Set an alias 'alias' for user/my-repo
+    # Set an alias 'myrepo' for user/my-repo
     > panky: gh set repo myrepo => user/my-repo
     # Link the github repo 'user/my-repo' with the jenkins job 'ci-job-name'
     > panky: ci set repo user/my-repo => ci-job-name
     # Run the 'ci-job-name' job against pull-request #1 on user/my-repo
     > panky: test my-repo pr 1
+    # List all pull-requests for a repo
+    > panky: gh prs myrepo
+    > <panky> Fix the broken things http://git.io/XXX
+    > <panky> Fix the other broken things http://git.io/XXXX
 
     # When a build succeeds/fails
     > <panky> [Jenkins: ci-job-name] failed https://myjenkins/job/ci-job-name/1
