@@ -25,14 +25,18 @@ BEGIN {
 our @EXPORT_OK = qw( panky json mock_chat mock_github );
 
 sub panky {
-    Test::Mojo->new( Panky->new(
+    my $panky = Panky->new(
         chat   => mock_chat(),
         github => mock_github(
             user => $ENV{PANKY_GITHUB_USER},
             pwd => $ENV{PANKY_GITHUB_PWD},
         ),
         ci => mock_ci( base_url => $ENV{PANKY_JENKINS_BASE_URL} ),
-    ));
+    );
+    $panky->ci->panky( $panky );
+    $panky->chat->panky( $panky );
+
+    Test::Mojo->new( $panky );
 }
 
 # Returns a mock chat object

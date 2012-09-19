@@ -11,14 +11,15 @@ sub pull_request {
     return if ($payload->action || 'closed') eq 'closed';
 
     my $nwo = $payload->repository->full_name;
-    my $repo = $self->config->{ lc( $nwo ) };
-    return "No related Jenkins Job found" unless $repo;
+    # Check if we have a CI job for this repo
+    $nwo = $self->panky->ci->job_for_repo( $nwo );
+    return "No related CI Job found" unless $nwo;
 
     # Get the sha1 hash of HEAD for the branch being PR'ed
     my $sha = $payload->pull_request->head->sha;
 
     # Tell Jenkins to start building this commit
-    my $url = $self->panky->ci->build( $repo->{job}, $sha );
+    my $url = $self->panky->ci->build( $nwo, $sha );
 
     # Let github know that a build is pending
     $self->panky->github->set_status( $nwo, $sha, 'pending', $url );
@@ -33,22 +34,8 @@ certain github hooks are received.
 
 Currently, it can perform jenkins builds on Github Pull Request actions.  In
 order for this to work, you must setup a mapping of github repositories to
-their respective jenkins jobs.  This can be done in your panky conf like this:
-
-    {
-       Github => {
-            HookActor => {
-                Jenkins => {
-                    'user/repo1' => {
-                        job => 'Jenkins-Job-Name',
-                    },
-                    'user/repo2' => {
-                        job => 'Other-Jenkins-Job',
-                    },
-                }
-            },
-        },
-    }
+their respective jenkins jobs.  This can be done in your C<panky.conf> as
+described in the Documentation for the L<Panky::CI> module.
 
 Additionally, your Jenkins jobs need to be set up as a 'parameterized' build,
 accepting one parameter called C<HEAD> which accepts the sha1 hash of the commit

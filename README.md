@@ -1,6 +1,6 @@
 # NAME
 
-Panky - Panky is a chatty, github-and-ci helper bot for your team
+Panky - Panky is a chatty, github, issue, and-ci helper bot for your team
 
 # VERSION
 
@@ -8,19 +8,44 @@ version 0.001
 
 # SYNOPSIS
 
-Panky aims to be a chatting, github and jenkins loving
+Panky is a chatting, github, Jira, jenkins loving
 web-app/bot/do-it-all/chef(?) for your team.
+
+Panky lurks in your teams chat room (Jabber is currently supported) and provides
+useful information and functionality __all day long__.
 
 __Note: [Panky](http://search.cpan.org/perldoc?Panky) is still in active development and is not feature complete__
 
 Currently, Panky will connect to your chat server, update you about what's
 going on with your github repos (new pushes, pull request activity, comments,
-etc.) and enable you to get info about them on demand.
+etc.) and enable you to get info about them on demand.  It can also parse
+`Jira` links, and provide information about (and start) `Jenkins` builds.
 
-In the future, Panky will be able to get Jenkins build statuses,
-create builds, run builds, and report back to the chat with its findings.
+Panky can also use the `Github|http://github.com`
+[commit status API](https://github.com/blog/1227-commit-status-api) to show
+the status of your Continuous Integration builds on Pull Requests.
 
-Panky will not make you a sandwich (yet).
+Some sample usage:
+
+    > panky: gh setup repo1/user1
+    # Panky sets up github hooks for itself for that repo
+
+    # Set an alias 'alias' for user/my-repo
+    > panky: gh set repo myrepo => user/my-repo
+    # Link the github repo 'user/my-repo' with the jenkins job 'ci-job-name'
+    > panky: ci set repo user/my-repo => ci-job-name
+    # Run the 'ci-job-name' job against pull-request #1 on user/my-repo
+    > panky: test my-repo pr 1
+
+    # When a build succeeds/fails
+    > <panky> [Jenkins: ci-job-name] failed https://myjenkins/job/ci-job-name/1
+
+    # When a teammate creates a pull request (with git.io shortened url)
+    > <panky> [user/my-repo] PR 'Fix the broken things' opened by throughnothing http://git.io/XXXX
+
+    # Panky can show info about your JIRA tickets
+    > hey, check out https://company.atlassian.net/brows/PROJ-1
+    > <panky> [PROJ-1](Priority) assignee => Issue summary
 
 # INSTALLING
 
@@ -47,15 +72,6 @@ The username of a Github user that will have access to whatever is needed.
 
 The Github password for the user mentioned above.
 
-You can also give it the `URL` to your [Jenkins](http://jenkins-ci.org) server
-via the `PANKY_JENKINS_URL` option.  [Panky](http://search.cpan.org/perldoc?Panky) will use this to generate
-links to Jenkins builds, etc.  If you want [Panky](http://search.cpan.org/perldoc?Panky) to be able to start builds
-on jenkins (from pull requests etc.) you should pass `PANKY_JENKINS_USER` and
-`PANKY_JENKINS_TOKEN`.
-
-Optionally, you can also provide chat parameters to have [Panky](http://search.cpan.org/perldoc?Panky) connect to
-jabber:
-
 - PANKY_CHAT_JABBER_JID
 
 The `jid` of [Panky](http://search.cpan.org/perldoc?Panky)'s jabber account.
@@ -74,6 +90,31 @@ part of the `jid`, then you can use this variable to do so.
 The jabber conference room that [Panky](http://search.cpan.org/perldoc?Panky) should join.  This should be the
 full `jid` of the room, such as `room@conference.jabber.server.com`.
 
+## Jenkins Support
+
+You can also give it the `URL` to your [Jenkins](http://jenkins-ci.org) server
+via the `PANKY_JENKINS_URL` option.  [Panky](http://search.cpan.org/perldoc?Panky) will use this to generate
+links to Jenkins builds, etc.  If you want [Panky](http://search.cpan.org/perldoc?Panky) to be able to start builds
+on jenkins (from pull requests etc.) you should pass `PANKY_JENKINS_USER` and
+`PANKY_JENKINS_TOKEN` for authentication.
+
+## JIRA Support
+
+[Panky](http://search.cpan.org/perldoc?Panky) can also work with JIRA if you have that.  You can enable JIRA support
+by setting the following environment variables:
+
+- PANKY_JIRA_URL
+
+The url of your jira server: `https://company.atlassian.net/`
+
+- PANKY_JIRA_USER
+
+The username to use to authenticate with your JIRA server.
+
+- PANKY_JIRA_PWD
+
+The password of the user used to authenticate with your JIRA server.
+
 ## Heroku
 
 To run [Panky](http://search.cpan.org/perldoc?Panky) in [Heroku](http://heroku.com), the easiest way is to use
@@ -82,6 +123,8 @@ the [Perloku](https://github.com/judofyr/perloku) buildpack.
     $ git clone https://github.com/throughnothing/Panky
     $ cd Panky
     $ heroku create -s cedar --buildpack http://github.com/judofyr/perloku.git
+    # Optionally, if you want persistent storage across app restarts
+    $ heroku addons:add heroku-postgresql(:dev)
 
 Now your heroku app is setup and ready to receive the [Panky](http://search.cpan.org/perldoc?Panky) application.
 Before you push [Panky](http://search.cpan.org/perldoc?Panky) to your app, you'll want to setup the environment
@@ -96,6 +139,11 @@ Once all of that is set up, you can deploy the app using:
     $ git push heroku master
 
 This will deploy your app code, install all dependencies, and run it.
+
+If you have the PostgreSQL addon enabled, [Pany](http://search.cpan.org/perldoc?Pany) will detect the
+`DATABASE_URL` environment variable present, and use the PostgreSQL server,
+otherwise it falls back to sqlite storage, which will get lost whenever
+you restart your app.
 
 # USAGE
 
