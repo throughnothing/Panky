@@ -70,8 +70,8 @@ sub directed_message {
 
             for ( @$prs ) {
                 my $url = makeashorterlink( $_->{html_url} );
-                my $title = $_->{title};
-                $self->say( "$title - $url" );
+                my ($number, $title) = ($_->{number}, $_->{title});
+                $self->say( "$number: $title - $url" );
             }
         }
         when ( /gh set repo (\S+) => (\S+)/ ) {

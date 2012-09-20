@@ -11,7 +11,7 @@ has events => sub { [qw(
 has url => 'https://api.github.com';
 has ua => sub { Mojo::UserAgent->new };
 has secret => 'panky-secret';
-has [qw( user pwd hook_url )];
+has [qw( panky user pwd hook_url )];
 
 sub new {
     my ($self, %args) = @_;
@@ -96,9 +96,7 @@ sub test_hook {
 sub _req {
     my($self, $method, $path, $json) = @_;
     $method = lc($method);
-    my $res = $self->ua->$method( $self->url . $path, $json )->res;
-    $self->panky->log->warn( $res->content );
-    return $res->json;
+    $self->ua->$method( $self->url . $path, $json )->res->json;
 }
 
 1;

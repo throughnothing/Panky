@@ -125,6 +125,7 @@ sub _setup_github {
     # Initialize GitHub API
     my $github_hook_url =
     $self->github( Panky::Github::API->new(
+        panky    => $self,
         ua       => $self->ua,
         user     => $ENV{PANKY_GITHUB_USER},
         pwd      => $ENV{PANKY_GITHUB_PWD},
@@ -199,8 +200,8 @@ Some sample usage:
     > panky: test my-repo pr 1
     # List all pull-requests for a repo
     > panky: gh prs myrepo
-    > <panky> Fix the broken things http://git.io/XXX
-    > <panky> Fix the other broken things http://git.io/XXXX
+    > <panky> 1: Fix the broken things http://git.io/XXX
+    > <panky> 2: Fix the other broken things http://git.io/XXXX
 
     # When a build succeeds/fails
     > <panky> [Jenkins: ci-job-name] failed https://myjenkins/job/ci-job-name/1
