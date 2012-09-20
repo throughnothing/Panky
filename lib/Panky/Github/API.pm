@@ -96,7 +96,9 @@ sub test_hook {
 sub _req {
     my($self, $method, $path, $json) = @_;
     $method = lc($method);
-    $self->ua->$method( $self->url . $path, $json )->res->json;
+    my $res = $self->ua->$method( $self->url . $path, $json )->res;
+    $self->panky->log->warn( $res->content );
+    return $res->json;
 }
 
 1;
