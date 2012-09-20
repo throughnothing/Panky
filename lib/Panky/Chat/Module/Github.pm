@@ -60,7 +60,7 @@ sub directed_message {
             # Test the specified hook
             $gh->test_hook( $1 );
         }
-        when( /gh prs (\S+)/ ){
+        when( /gh prs (\S+)( \+[sS])?/ ){
             my $repo = $self->_get_repo( $1 );
             # List pull requests for a repo
             my $prs = $self->panky->github->get_pulls( $repo );
@@ -71,7 +71,19 @@ sub directed_message {
             for ( @$prs ) {
                 my $url = makeashorterlink( $_->{html_url} );
                 my ($number, $title) = ($_->{number}, $_->{title});
-                $self->say( "$number: $title - $url" );
+
+                my $state = '';
+                # If we asked for states (+s)
+                if( $2 ) {
+                    # Get status of HEAD commit
+                    my $nwo = $_->{head}{repo}{full_name};
+                    my $sha = $_->{head}{sha};
+                    my $res = $gh->get_status( $nwo, $sha );
+                    $state = ref($res) eq 'ARRAY' ?
+                                $res->[0]{state} : 'unknown';
+                    $state = " (state: $state) ";
+                }
+                $self->say( "$number: $title$state- $url" );
             }
         }
         when ( /gh set repo (\S+) => (\S+)/ ) {

@@ -64,6 +64,11 @@ sub set_status {
     });
 }
 
+sub get_status {
+    my ($self, $nwo, $sha) = @_;
+    $self->_req( GET => "/repos/$nwo/statuses/$sha" );
+}
+
 sub get_hook {
     my ($self, $hook_url) = @_;
     $self->_req( GET => URI->new( $hook_url )->path );

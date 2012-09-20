@@ -18,4 +18,6 @@ is pop($s)->[0] => "$user: repo alias removed!";
 $p->app->chat->tell( 'gh show repo test', from => $user );
 is pop($s)->[0] => "$user: test => none";
 
+# TODO: test listing prs
+
 done_testing;
