@@ -13,7 +13,7 @@ sub pull_request {
     my $nwo = $payload->repository->full_name;
     # Check if we have a CI job for this repo
     my $job = $self->panky->ci->job_for_repo( $nwo );
-    return "No related CI Job found" unless $nwo;
+    return "No related CI Job found" unless $job;
 
     # Get the sha1 hash of HEAD for the branch being PR'ed
     my $sha = $payload->pull_request->head->sha;
