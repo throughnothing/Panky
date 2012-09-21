@@ -15,6 +15,7 @@ my %WriteMakefileArgs = (
     "File::Find" => 0,
     "File::Slurp" => 0,
     "File::Temp" => 0,
+    "Mojo::Message::Response" => 0,
     "Test::Mojo" => 0,
     "Test::More" => 0,
     "Test::Most" => 0

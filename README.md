@@ -29,19 +29,25 @@ the status of your Continuous Integration builds on Pull Requests.
 
 Some sample usage:
 
-    > panky: gh setup repo1/user1
     # Panky sets up github hooks for itself for that repo
+    # Of course your github user must have admin access to the repo in question
+    # For this to work
+    > panky: gh setup repo1/user1
 
     # Set an alias 'myrepo' for user/my-repo
     > panky: gh set repo myrepo => user/my-repo
     # Link the github repo 'user/my-repo' with the jenkins job 'ci-job-name'
     > panky: ci set repo user/my-repo => ci-job-name
+
     # Run the 'ci-job-name' job against pull-request #1 on user/my-repo
     > panky: test my-repo pr 1
+    # Run the 'ci-job-name' job against commit abc123
+    > panky: test my-repo abc123
+
     # List all pull-requests for a repo
     > panky: gh prs myrepo
-    > <panky> Fix the broken things http://git.io/XXX
-    > <panky> Fix the other broken things http://git.io/XXXX
+    > <panky> 1: Fix the broken things http://git.io/XXX
+    > <panky> 2: Fix the other broken things http://git.io/XXXX
 
     # When a build succeeds/fails
     > <panky> [Jenkins: ci-job-name] failed https://myjenkins/job/ci-job-name/1
