@@ -55,6 +55,7 @@ sub pull_request {
     return unless $c;
 
     my $name = $payload->repository->name;
+    my $number = $payload->number;
     my $action = $payload->action;
     my $title  = $payload->pull_request->title;
     my $user = $payload->sender->login;
@@ -67,7 +68,8 @@ sub pull_request {
         return unless $c->{$action};
     }
 
-    $self->panky->chat->say("[$name] PR '$title' $action by $user $url");
+    $self->panky->chat->say(
+        "[$name] PR-$number '$title' $action by $user $url");
 }
 
 1;
