@@ -1,5 +1,6 @@
 # TODO
 
+* Papertrailapp chat/hook modules
 * Github Hook Secret Signing Support (`hub.secret` on
     [Repo * Hooks](http://developer.github.com/v3/repos/hooks/))
 * Make the '/' page look better (good)
@@ -10,3 +11,4 @@
     - 'panky merge site dev => master' merge sit repo dev branch into master
 * Make it easier to deploy custom modules with heroku/dotcloud
     - specific buildpacks?
+    - https://gist.github.com/3750894 (doesn't quite work yet)
