@@ -51,6 +51,7 @@ sub directed_message {
     my $gh = $self->panky->github;
 
     given( $msg ) {
+        when( /gh help/ ) { $self->help( $from ) }
         when( /gh setup (\S+)/ ) {
             # Setup a hook for a repo
             $gh->create_hook( $1 );
@@ -131,6 +132,16 @@ sub directed_message {
         }
     }
 }
+
+sub help {
+    my ($self, $from) = @_;
+    $self->say( "$from: gh setup repo # Setup webhooks for repo");
+    $self->say( "$from: gh set repo org/repo => alias");
+    $self->say( "$from: gh unset repo alias");
+    $self->say( "$from: gh show repo alias");
+    $self->say( "$from: gh prs repo|alias [+s]" );
+    $self->say( "$from: gh test repo|alias SHA|pr ##");
+};
 
 # Get the full repo name.
 # Will return the repo name from an alias if set, otherwise it will return
