@@ -11,19 +11,27 @@ sub message {
 
     given( $msg ) {
         when ( /$ENV{PANKY_JIRA_URL}browse\/((\w+)-(\d+))/ ) {
-            # Show the summary of Jira links
-            my $ticket = $1;
-            my $res = $jira->get_issue( $ticket );
-
-            return unless ref $res && $res->{body};
-
-            my $summary = $res->{body}{fields}{summary};
-            my $status = $res->{body}{fields}{status}{name};
-            my $priority = $res->{body}{fields}{priority}{name};
-            my $assignee = $res->{body}{fields}{assignee}{name};
-            $self->say("[$ticket]($priority) $status: $assignee => $summary");
+            $self->_say_ticket_info( $1 );
+        } when ( /([A-Z]{2,10}-\d+)/ ) {
+            $self->_say_ticket_info( $1 );
         }
     }
+}
+
+sub _say_ticket_info {
+    my ($self, $ticket) = @_;
+    # If we don't have Jira, don't do anything
+    my $jira = $self->panky->jira or return;
+
+    my $res = $jira->get_issue( $ticket );
+
+    return unless ref $res && $res->{body};
+
+    my $summary = $res->{body}{fields}{summary};
+    my $status = $res->{body}{fields}{status}{name};
+    my $priority = $res->{body}{fields}{priority}{name};
+    my $assignee = $res->{body}{fields}{assignee}{name};
+    $self->say("[$ticket]($priority) $status: $assignee => $summary");
 }
 
 1;
