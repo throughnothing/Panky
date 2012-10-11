@@ -13,13 +13,15 @@ sub message {
         when ( /$ENV{PANKY_JIRA_URL}browse\/((\w+)-(\d+))/ ) {
             # Show the summary of Jira links
             my $ticket = $1;
-            my $res = $jira->get_issue( $1 );
+            my $res = $jira->get_issue( $ticket );
+
             return unless ref $res && $res->{body};
 
             my $summary = $res->{body}{fields}{summary};
+            my $status = $res->{body}{fields}{status}{name};
             my $priority = $res->{body}{fields}{priority}{name};
             my $assignee = $res->{body}{fields}{assignee}{name};
-            $self->say("[$ticket]($priority) $assignee => $summary");
+            $self->say("[$ticket]($priority) $status: $assignee => $summary");
         }
     }
 }
