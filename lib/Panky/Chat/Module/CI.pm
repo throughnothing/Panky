@@ -25,6 +25,14 @@ sub directed_message {
             $repo = ($repo eq $1) ? 'none' : $repo;
             $self->say( "$from: $1 => $repo" );
         }
+        when ( /ci test (\S+)/ ) {
+            # See if we have a Jenkins Build for this repo
+            my $job_name = $1;
+            my $res = $self->panky->ci->build( $job_name );
+            use Data::Dumper;
+            print STDERR "ci test: res: " . Dumper $res . "\n";
+            $self->say( "$from: building $job_name..." );
+        }
     }
 }
 

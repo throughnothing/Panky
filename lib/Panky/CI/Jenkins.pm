@@ -16,7 +16,8 @@ sub build {
     # If job_name is a repo, find the job name for it
     $job_name = $self->job_for_repo( $job_name ) || $job_name;
 
-    my $data = { parameter => { name => 'HEAD', value => $sha } };
+    my $data;
+    $data = { parameter => { name => 'HEAD', value => $sha } } if $sha;
     my $res = $self->_req( POST_FORM => "job/$job_name/build", $data );
     return $res->headers->location;
 }
