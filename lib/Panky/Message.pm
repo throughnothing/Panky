@@ -14,7 +14,6 @@ sub hook {
     my $token = $self->config->{Message}{token};
     if( $token ){
         $self->render_exception('Bad Token!') unless $json->{token} eq $token;
-        return;
     }
 
     $self->app->chat->say( $json->{msg} ) if $json->{msg};
