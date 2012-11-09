@@ -46,6 +46,9 @@ sub startup {
     # Home Page Route
     $r->get('/')->to('app#home');
 
+    # Generic Message Hooks point here
+    $r->post('/_message')->to('message#hook');
+
     # Github Hooks point here
     $r->post('/_github')->to('github#hook');
 
