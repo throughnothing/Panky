@@ -19,7 +19,8 @@ sub pull_request {
     my $sha = $payload->pull_request->head->sha;
 
     # Tell Jenkins to start building this commit
-    my $url = $self->panky->ci->build( $nwo, $sha );
+    my $res = $self->panky->ci->build( $nwo, $sha );
+    my $url = $res->headers->location;
 
     # Let github know that a build is pending
     $self->panky->github->set_status( $nwo, $sha, 'pending', $url );

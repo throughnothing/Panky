@@ -17,6 +17,7 @@ sub _default_res {
     my ($self) = @_;
     my $res = Mojo::Message::Response->new;
     $res->headers->location('http://localhost:2000');
+    $res->code( 302 );
     $res;
 }
 

@@ -19,7 +19,13 @@ sub build {
     my $data;
     $data = { parameter => { name => 'HEAD', value => $sha } } if $sha;
     my $res = $self->_req( POST_FORM => "job/$job_name/build", $data );
-    return $res->headers->location;
+
+    if( $res->code ~~ /^[45]/ ) {
+        $self->panky->chat->say(
+            "There was an error starting the $job_name build on Jenkins :(");
+        die "Error building $job_name on Jenkins";
+    }
+    return $res;
 }
 
 sub _req {
