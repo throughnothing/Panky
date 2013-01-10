@@ -32,7 +32,7 @@ sub _req {
 
     # url_escape the data as json inside the json parameter
     # ...this is what jenkins wants :-X
-    $data = { json => url_escape( $self->json->encode( $data ) ) };
+    $data = { json => $self->json->encode( $data ) };
 
     $self->ua->$method( $base . $path, $data )->res;
 }
