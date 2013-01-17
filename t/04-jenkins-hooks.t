@@ -29,7 +29,7 @@ subtest 'Build Success Hook w/chat, no pr comment' => sub {
     is $req->[0] => 'POST_JSON';
     is $req->[1] => '/repos/repo/user/statuses/abc123';
     is $req->[2]{state} => 'success';
-    is $req->[2]{target_url} => 'http://localhost:4000/job/Jenkins-Job/8';
+    is $req->[2]{target_url} => 'http://localhost:4000/job/Jenkins-Job/8/';
 };
 
 subtest 'Build Success Hook w/o chat, no pr comment' => sub {
@@ -67,7 +67,7 @@ subtest 'Build Failure Hook w/chat, no pr comment' => sub {
     is $req->[0] => 'POST_JSON';
     is $req->[1] => '/repos/repo/user/statuses/abc123';
     is $req->[2]{state} => 'failure';
-    is $req->[2]{target_url} => 'http://localhost:4000/job/Jenkins-Job/8';
+    is $req->[2]{target_url} => 'http://localhost:4000/job/Jenkins-Job/8/';
 };
 
 

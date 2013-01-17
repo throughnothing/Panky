@@ -79,7 +79,7 @@ sub _comment {
 sub _get_build_url {
     my ($self, $payload) = @_;
     my ($name, $build) = ($payload->{job_name}, $payload->{job_number});
-    return $self->panky->ci->base_url . "job/$name/$build/?";
+    return $self->panky->ci->base_url . "job/$name/$build/";
 }
 
 sub _get_status { lc( $_[1] ? $_[1] : 'failure' ) }
