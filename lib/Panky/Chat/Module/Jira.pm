@@ -31,7 +31,13 @@ sub _say_ticket_info {
     my $status = $res->{body}{fields}{status}{name};
     my $priority = $res->{body}{fields}{priority}{name};
     my $assignee = $res->{body}{fields}{assignee}{name};
-    $self->say("[$ticket]($priority) $status: $assignee => $summary");
+    my $url = $self->_ticket_url( $ticket );
+    $self->say("[$ticket]($priority) $status: $assignee => $summary $url");
+}
+
+sub _ticket_url {
+    my($self, $ticket) = @_;
+    return $ENV{PANKY_JIRA_URL} . 'browse/' . $ticket;
 }
 
 1;
