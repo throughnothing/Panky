@@ -65,6 +65,31 @@ Some sample usage:
 you probably want to use either [Twiggy](http://search.cpan.org/perldoc?Twiggy), or the builtin [Mojolicious](http://search.cpan.org/perldoc?Mojolicious)
 server.
 
+To install the dependencies for [Panky](http://search.cpan.org/perldoc?Panky), simply run:
+
+    cpanm --installdeps .
+
+If you're using OSX, there's a good chance [EV](http://search.cpan.org/perldoc?EV) will fail to install.  A nasty
+workaround for this for now, is to download the latest EV package tarball
+(link can be found here: https://metacpan.org/module/EV ), and modify the
+`Makefile.PL`.  Find the `WriteMakefile` section near the bottom, and add:
+
+    CC => 'gcc',
+
+to its outermost arguments list.  You should get something like:
+
+    WriteMakefile(
+        dist => { ... },
+        depend => { ... },
+        CC => 'gcc',
+        INC       => "-Ilibev",
+        DEFINE    => "$DEFINE",
+        NAME => "EV",
+
+Once you've done that, you can `cpanm .` from inside the code directory to
+install it.  After that, the rest of the dependencies should install fine
+on OS X using `cpanm --installdeps .`
+
 ## Environment Variables
 
 [Panky](http://search.cpan.org/perldoc?Panky) is configured via environment variables to make it easy to install on

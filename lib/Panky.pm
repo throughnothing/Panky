@@ -229,6 +229,32 @@ L<Panky> requires a non-blocking server in order to run.  This means that
 you probably want to use either L<Twiggy>, or the builtin L<Mojolicious>
 server.
 
+To install the dependencies for L<Panky>, simply run:
+
+    cpanm --installdeps .
+
+If you're using OSX, there's a good chance L<EV> will fail to install.  A nasty
+workaround for this for now, is to download the latest EV package tarball
+(link can be found here: https://metacpan.org/module/EV ), and modify the
+C<Makefile.PL>.  Find the C<WriteMakefile> section near the bottom, and add:
+
+    CC => 'gcc',
+
+to its outermost arguments list.  You should get something like:
+
+
+    WriteMakefile(
+        dist => { ... },
+        depend => { ... },
+        CC => 'gcc',
+        INC       => "-Ilibev",
+        DEFINE    => "$DEFINE",
+        NAME => "EV",
+
+Once you've done that, you can `cpanm .` from inside the code directory to
+install it.  After that, the rest of the dependencies should install fine
+on OS X using `cpanm --installdeps .`
+
 =head2 Environment Variables
 
 L<Panky> is configured via environment variables to make it easy to install on
