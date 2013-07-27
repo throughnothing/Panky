@@ -13,9 +13,11 @@ sub message {
     my ($self, $msg, $from) = @_;
 
     # Detect twitter links
-    if( $msg =~ qr{https?://twitter.com/\S+/status/(\S+)$} ) {
-        my $json = $self->ua->get( "$t_base/$1.json" )->res->json;
-        $self->say( "\@$json->{user}{screen_name}: $json->{text}" ) if $json;
+    if( $msg =~ qr{(https?://twitter.com/\S+/status/\S+)$} ) {
+        my $res = $self->ua->get( $1 )->res;
+        my $user = $res->dom('div.tweet div.content span.username b')->first->text;
+        my $tweet = $res->dom('div.tweet p.tweet-text')->first->text;
+        $self->say( "\@$user: $tweet" ) if $user && $tweet;
     }
 
 }
