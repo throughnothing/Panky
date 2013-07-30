@@ -11,13 +11,14 @@ sub directed_message {
     my ($self, $msg, $from) = @_;
 
     # Detect twitter links
-    if( $msg =~ qr{define\s+(\S+)} ) {
-        my $res = $self->ddg->zeroclickinfo( $1 );
+    if( $msg =~ qr{(define|abstract|(what\s(does|is(\s+a)?|are)))\s+(.+)$}i ) {
+        my $term = $5;
+        my $res = $self->ddg->zeroclickinfo( $term );
         my $def = $res->{definition} || $res->{abstract};
         if( $def ) {
             $self->say( $def );
         } else {
-            $self->say( "$from: I have no fucking clue what $1 means :(" );
+            $self->say( "$from: I have no fucking clue what $term means :(" );
         }
     }
 

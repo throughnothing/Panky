@@ -14,7 +14,7 @@ sub message {
 
     my @data = $self->parse_spotify_uris( $msg );
     return unless @data;
-    $self->say( $info ) for @data;
+    $self->say( $_ ) for @data;
 }
 
 # This sub taken from Bot::Basic::Pluggable::Module::Spotify
