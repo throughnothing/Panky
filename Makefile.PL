@@ -11,15 +11,7 @@ use ExtUtils::MakeMaker 6.30;
 my %WriteMakefileArgs = (
   "ABSTRACT" => "Panky is a chatty, github, issue, and-ci helper bot for your team",
   "AUTHOR" => "William Wolf <throughnothing\@gmail.com>",
-  "BUILD_REQUIRES" => {
-    "File::Find" => 0,
-    "File::Slurp" => 0,
-    "File::Temp" => 0,
-    "Mojo::Message::Response" => 0,
-    "Test::Mojo" => 0,
-    "Test::More" => 0,
-    "Test::Most" => 0
-  },
+  "BUILD_REQUIRES" => {},
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30"
   },
@@ -49,13 +41,25 @@ my %WriteMakefileArgs = (
     "Mojo::URL" => 0,
     "Mojo::UserAgent" => 0,
     "Mojo::Util" => 0,
+    "Net::Spotify" => 0,
     "SQL::Translator" => "0.11012",
     "URI" => 0,
+    "WWW::DuckDuckGo" => 0,
     "WWW::Shorten" => 0,
     "WWW::Shorten::GitHub" => "v0.1.3",
+    "XML::TreePP" => 0,
     "base" => 0,
     "strict" => 0,
     "warnings" => 0
+  },
+  "TEST_REQUIRES" => {
+    "File::Find" => 0,
+    "File::Slurp" => 0,
+    "File::Temp" => 0,
+    "Mojo::Message::Response" => 0,
+    "Test::Mojo" => 0,
+    "Test::More" => 0,
+    "Test::Most" => 0
   },
   "VERSION" => "0.001",
   "test" => {
@@ -63,6 +67,19 @@ my %WriteMakefileArgs = (
   }
 );
 
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
+  my $tr = delete $WriteMakefileArgs{TEST_REQUIRES};
+  my $br = $WriteMakefileArgs{BUILD_REQUIRES};
+  for my $mod ( keys %$tr ) {
+    if ( exists $br->{$mod} ) {
+      $br->{$mod} = $tr->{$mod} if $tr->{$mod} > $br->{$mod};
+    }
+    else {
+      $br->{$mod} = $tr->{$mod};
+    }
+  }
+}
 
 unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
   my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
