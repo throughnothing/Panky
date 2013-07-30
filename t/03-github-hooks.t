@@ -67,6 +67,7 @@ subtest 'Pull Request Reopened Hook, With Bad Jenkins Res' => sub {
     );
 
     # Setup Jenkins Job for repo
+    $panky->app->chat->sayings([]);
     my $sayings = $panky->app->chat->sayings;
     $panky->app->chat->tell( 'ci set repo throughnothing/dotfiles => job-1');
     like pop(@$sayings)->[0] => qr/got it/;
@@ -80,5 +81,5 @@ subtest 'Pull Request Reopened Hook, With Bad Jenkins Res' => sub {
 
     # Now test that Chat->say() was called properly by Failed Jenkins Res
     is @$sayings => 1, 'Said one thing on pull request' or explain $sayings;
-    like $sayings->[0]->[0] => qr/error starting/, 'Said about jenkins error';
+    like $sayings->[0][0] => qr/error starting/, 'Said about jenkins error';
 };
