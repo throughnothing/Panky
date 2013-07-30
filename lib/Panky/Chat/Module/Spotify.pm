@@ -59,3 +59,5 @@ sub _parse_spotify_uris {
 
    return @data;
 }
+
+1;
