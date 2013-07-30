@@ -12,7 +12,8 @@ sub directed_message {
 
     # Detect twitter links
     if( $msg =~ qr{define\s+(\S+)} ) {
-        my $def = $self->ddg->zeroclickinfo( $1 )->{definition};
+        my $res = $self->ddg->zeroclickinfo( $1 );
+        my $def = $res->{definition} || $res->{abstract};
         if( $def ) {
             $self->say( $def );
         } else {
