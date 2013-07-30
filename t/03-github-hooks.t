@@ -11,7 +11,7 @@ subtest 'Pull Request Reopened Hook, No Jenkins' => sub {
     );
 
     # Check that we can post to _github and get a Thanks! response
-    $panky->post_json_ok('/_github' => $pr )->content_like(qr/Thanks!/);
+    $panky->post_ok('/_github' => json => $pr )->content_like(qr/Thanks!/);
 
     # Now test that Chat->say() was called properly by HookActor::Generic
     my $sayings = $panky->app->chat->sayings;
@@ -37,7 +37,7 @@ subtest 'Pull Request Reopened Hook, With Jenkins' => sub {
     like pop(@$sayings)->[0] => qr/got it/;
 
     # Check that we can post to _github and get a Thanks! response
-    $panky->post_json_ok('/_github' => $pr )->content_like(qr/Thanks!/);
+    $panky->post_ok('/_github' => json => $pr )->content_like(qr/Thanks!/);
 
     # Now test that Chat->say() was called properly by HookActor::Generic
     is @$sayings => 1, 'Said one thing on pull request' or explain $sayings;
@@ -76,7 +76,7 @@ subtest 'Pull Request Reopened Hook, With Bad Jenkins Res' => sub {
     $bad_res->code( 500 );
     push @{$panky->app->ci->responses}, $bad_res;
     # Check that we can post to _github and get a Thanks! response
-    $panky->post_json_ok('/_github' => $pr )->status_is( 500 );
+    $panky->post_ok('/_github' => json => $pr )->status_is( 500 );
 
     # Now test that Chat->say() was called properly by Failed Jenkins Res
     is @$sayings => 1, 'Said one thing on pull request' or explain $sayings;

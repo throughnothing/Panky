@@ -19,7 +19,7 @@ subtest 'Build Success Hook w/chat, no pr comment' => sub {
     $conf->{comment_in_chat} = { success => 1 };
     $conf->{comment_on_prs}  = 0;
 
-    $panky->post_form_ok('/_jenkins' => $data )->content_like(qr/Thanks!/);
+    $panky->post_ok('/_jenkins' => form => $data )->content_like(qr/Thanks!/);
 
     my $saying = pop @{ $panky->app->chat->sayings };
     like $saying->[0] => qr/^\[Jenkins:/;
@@ -37,7 +37,7 @@ subtest 'Build Success Hook w/o chat, no pr comment' => sub {
     $conf->{comment_in_chat} = 0;
     $conf->{comment_on_prs}  = 0;
 
-    $panky->post_form_ok('/_jenkins' => $data )->content_like(qr/Thanks!/);
+    $panky->post_ok('/_jenkins' => form => $data )->content_like(qr/Thanks!/);
 
     # Make sure we got no messages
     ok !pop @{ $panky->app->chat->sayings };
@@ -57,7 +57,7 @@ subtest 'Build Failure Hook w/chat, no pr comment' => sub {
     # Set no status
     $data->{status} = undef;
     # Check that we can post to _github and get a Thanks! response
-    $panky->post_form_ok('/_jenkins' => $data )->content_like(qr/Thanks!/);
+    $panky->post_ok('/_jenkins' => form => $data )->content_like(qr/Thanks!/);
 
     my $saying = pop @{ $panky->app->chat->sayings };
     like $saying->[0] => qr/^\[Jenkins:/;
@@ -76,14 +76,14 @@ subtest 'Build Hook w/chat = 1' => sub {
     $conf->{comment_on_prs}  = 0;
 
     # Test success
-    $panky->post_form_ok('/_jenkins' => $data )->content_like(qr/Thanks!/);
+    $panky->post_ok('/_jenkins' => form => $data )->content_like(qr/Thanks!/);
     my $saying = pop @{ $panky->app->chat->sayings };
     like $saying->[0] => qr/success/;
 
     # Test failure
     my $data = { %$data };
     $data->{status} = undef;
-    $panky->post_form_ok('/_jenkins' => $data )->content_like(qr/Thanks!/);
+    $panky->post_ok('/_jenkins' => form => $data )->content_like(qr/Thanks!/);
     $saying = pop @{ $panky->app->chat->sayings };
     like $saying->[0] => qr/failure/;
 };
