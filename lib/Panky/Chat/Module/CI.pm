@@ -29,8 +29,6 @@ sub directed_message {
             # See if we have a Jenkins Build for this repo
             my $job_name = $1;
             my $res = $self->panky->ci->build( $job_name );
-            use Data::Dumper;
-            print STDERR "ci run: res: " . Dumper $res . "\n";
             $self->say( "$from: building $job_name..." );
         }
     }
