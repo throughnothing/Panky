@@ -2,10 +2,19 @@ package Panky::Chat::Module::DDG;
 use v5.10;
 use Mojo::Base 'Panky::Chat::Module';
 use WWW::DuckDuckGo;
+use Regexp::Assemble;
 
 # ABSTRACT: Uses the DuckDuckGo Instant Answers API
 
 has ddg => sub { WWW::DuckDuckGo->new };
+has re => sub {
+    #if( $msg =~ qr{(define|abstract|(((what)|(who))\s(does|is(\s+a)?|are)))\s+([^?!]+)([?!\s]+)?$}i ) {
+    Regexp::Assemble->new
+        ->add( 'define\s+([^?!]+)[?!]*$' )
+        ->add( 'abstract\s+([^?!]+)[?!]*$' )
+        ->add( '(?:what\'?s?|who\'?s?)\s*(?:is|are|does)?\s+([^?!]+)[?!]*$' )
+        ;
+};
 
 sub directed_message {
     my ($self, $msg, $from) = @_;
@@ -25,8 +34,9 @@ sub directed_message {
 sub _parse_msg {
     my ($self, $msg) = @_;
 
-    if( $msg =~ qr{(define|abstract|((what|who)\s(does|is(\s+a)?|are)))\s+([^?!]+)([?!\s]+)?$}i ) {
-        return $6;
+    my $re = $self->re;
+    if( $msg =~ /$re/ ) {
+        return $1;
     }
 }
 

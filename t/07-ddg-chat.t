@@ -17,10 +17,12 @@ my $ddg = Panky::Chat::Module::DDG->new;
 
 my %msgs = (
     'what is feces two' => 'feces two',
+    'whats feces two three' => 'feces two three',
     'what are feces' => 'feces',
     'define feces two' => 'feces two',
     'abstract feces two' => 'feces two',
     'who is feces two three?!' => 'feces two three',
+    "who's feces two three?!" => 'feces two three',
 );
 
 for my $key ( keys %msgs ) {

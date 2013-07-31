@@ -42,6 +42,7 @@ my %WriteMakefileArgs = (
     "Mojo::UserAgent" => 0,
     "Mojo::Util" => 0,
     "Net::Spotify" => 0,
+    "Regexp::Assemble" => 0,
     "SQL::Translator" => "0.11012",
     "URI" => 0,
     "WWW::DuckDuckGo" => 0,
