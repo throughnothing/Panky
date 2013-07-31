@@ -8,12 +8,11 @@ use Regexp::Assemble;
 
 has ddg => sub { WWW::DuckDuckGo->new };
 has re => sub {
-    #if( $msg =~ qr{(define|abstract|(((what)|(who))\s(does|is(\s+a)?|are)))\s+([^?!]+)([?!\s]+)?$}i ) {
     Regexp::Assemble->new
         ->add( 'define\s+([^?!]+)[?!]*$' )
         ->add( 'abstract\s+([^?!]+)[?!]*$' )
         ->add( '(?:what\'?s?|who\'?s?)\s*(?:is|are|does)?\s+([^?!]+)[?!]*$' )
-        ;
+    ;
 };
 
 sub directed_message {
