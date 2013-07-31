@@ -1,4 +1,4 @@
-package Pany::Chat::Module::Spotify;
+package Panky::Chat::Module::Spotify;
 use v5.10;
 use Mojo::Base 'Panky::Chat::Module';
 use Net::Spotify;
@@ -12,7 +12,7 @@ has tpp     => sub { XML::TreePP->new };
 sub message {
     my ($self, $msg, $from) = @_;
 
-    my @data = $self->parse_spotify_uris( $msg );
+    my @data = $self->_parse_spotify_uris( $msg );
     return unless @data;
     $self->say( $_ ) for @data;
 }
