@@ -1,20 +1,33 @@
 package Panky::Chat::Module::Eval;
 
 use v5.10;
+use JE;
 use Mojo::Base 'Panky::Chat::Module';
 
 # ABSTRACT: Let's you evaluate code
+
+has je => sub { JE->new };
 
 sub directed_message { shift->message( @_ ) }
 
 sub message {
     my ($self, $msg, $from) = @_;
 
-    if( $msg =~ qr/^perl:?\s*(.+)$/i ) {
-        my $reval = $self->_run_perl( $1 );
+    if( $msg =~ qr/^(\w+):?\s*(.+)$/i ) {
+        my ($lang, $code, $reval ) = ($1, $2);
+        given( $lang ) {
+            when( qr/perl|pl/i ) {
+                $reval = $self->_run_perl( $code );
+            }
+            when( qr/javascript|js/i ) {
+                $reval = $self->_run_js( $code );
+            }
+        }
         $self->say( '>> ' . $reval ) if $reval;
     }
 }
+
+sub _run_js { $_[0]->je->eval( $_[1] ) }
 
 sub _run_perl {
     my ($self, $code) = @_;
