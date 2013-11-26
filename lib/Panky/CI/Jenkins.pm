@@ -18,7 +18,7 @@ sub build {
 
     my $data;
     $data = { parameter => { name => 'HEAD', value => $sha } } if $sha;
-    my $res = $self->_req( POST_FORM => "job/$job_name/build", $data );
+    my $res = $self->_req( POST => "job/$job_name/build", $data );
 
     if( $res->code ~~ /^[45]/ ) {
         $self->panky->chat->say(
@@ -40,7 +40,7 @@ sub _req {
     # ...this is what jenkins wants :-X
     $data = { json => $self->json->encode( $data ) };
 
-    $self->ua->$method( $base . $path, $data )->res;
+    $self->ua->$method( $base . $path, form => $data )->res;
 }
 
 # Get the CI job for the given repo.  Returns undef if not found
