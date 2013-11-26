@@ -52,6 +52,13 @@ sub getsentbyaddress { $_[0]->_q_req('/getsentbyaddress/', $_[1]) / 100000 }
 sub addressbalance { $_[0]->_q_req('/addressbalance/', $_[1]) / 100000000 }
 sub addressfirstseen { $_[0]->_q_req('/addressfirstseen/', $_[1]) / 100000000 }
 
+sub cur_rate {
+    my ($self, $cur) = @_;
+    $cur = $cur ? uc($cur) : 'USD';
+    my $res = $self->ua->get( $self->base_url . '/ticker' )->res->json;
+    return $res->{$cur} || $res->{USD};
+}
+
 sub tobtc {
     my ($self, $val, $currency) = @_;
     $currency ||= 'USD';

@@ -10,8 +10,17 @@ has blockchain => sub { Blockchain->new };
 sub message {
     my ($self, $msg, $from) = @_;
     given ( $msg ) {
-        when (/bitcoin price/) {
-            $self->say( "BTC 24hr price: " . $self->blockchain->tfhprice );
+        when (/(bitcoin|btc) price\s?(\S+)?/i) {
+            my $exchange = $self->blockchain->cur_rate( $2 );
+            $self->say( "$exchange->{symbol}$exchange->{last}" ) if $exchange;
+        }
+        when (/(\d+(\.\d+)?)\s?(btc|bitcoins?)( in (\S+))?/i) {
+            my $exchange = $self->blockchain->cur_rate( $5 );
+            return unless $exchange;
+            my $btc_amt = $1;
+            my $cur_amt = $exchange->{symbol} .
+                sprintf( "%.2f", $exchange->{last} * $btc_amt );
+            $self->say("$1BTC => $cur_amt");
         }
         when (/(\d+.?(\d+)?) in (btc|bitcoin)/i) {
             $self->say(
@@ -26,13 +35,13 @@ sub message {
 sub directed_message {
     my ($self, $msg, $from) = @_;
     given( $msg ) {
-        when( /bitcoin help/ ) { $self->help( $from ) }
-        when( /bitcoin (\S+)\s?(\S+)?/ ) {
-            my $cmd = $1 =~ s/^24/tf/r;
-            my $arg1 = $2;
+        when( /(bitcoin|btc) help/i ) { $self->help( $from ) }
+        when( /(bitcoin|btc) (\S+)\s?(\S+)?/i ) {
+            my $cmd = $2 =~ s/^24/tf/r;
+            my $arg1 = $3;
             if( $self->blockchain->can( $cmd ) ) {
-                my $res = $self->blockchain->$cmd( $2 );
-                $self->say("$from: $cmd - $res") if $res;
+                my $res = $self->blockchain->$cmd( $3 );
+                $self->say("$cmd: $res") if $res;
             }
         }
     }
