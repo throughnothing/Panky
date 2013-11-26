@@ -10,9 +10,13 @@ has blockchain => sub { Blockchain->new };
 sub message {
     my ($self, $msg, $from) = @_;
     given ( $msg ) {
-        when (/(bitcoin|btc) price\s?(\S+)?/i) {
-            my $exchange = $self->blockchain->cur_rate( $2 );
-            $self->say( "$exchange->{symbol}$exchange->{last}" ) if $exchange;
+        when( /(bitcoin|btc) (\S+)\s?(\S+)?/i ) {
+            my $cmd = $2 =~ s/^24/tf/r;
+            my $arg1 = $3;
+            if( $self->blockchain->can( $cmd ) ) {
+                my $res = $self->blockchain->$cmd( $3 );
+                $self->say("$cmd: $res") if $res;
+            }
         }
         when (/(\d+(\.\d+)?)\s?(btc|bitcoins?)( in (\S+))?/i) {
             my $exchange = $self->blockchain->cur_rate( $5 );
@@ -36,14 +40,6 @@ sub directed_message {
     my ($self, $msg, $from) = @_;
     given( $msg ) {
         when( /(bitcoin|btc) help/i ) { $self->help( $from ) }
-        when( /(bitcoin|btc) (\S+)\s?(\S+)?/i ) {
-            my $cmd = $2 =~ s/^24/tf/r;
-            my $arg1 = $3;
-            if( $self->blockchain->can( $cmd ) ) {
-                my $res = $self->blockchain->$cmd( $3 );
-                $self->say("$cmd: $res") if $res;
-            }
-        }
     }
 }
 
