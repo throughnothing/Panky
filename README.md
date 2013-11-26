@@ -8,7 +8,7 @@ version 0.001
 
 # SYNOPSIS
 
-[![Build Status](https://secure.travis-ci.org/throughnothing/Panky.png?branch=master)](http://travis-ci.org/throughnothing/Panky)
+\[!\[Build Status\](https://secure.travis-ci.org/throughnothing/Panky.png?branch=master)\](http://travis-ci.org/throughnothing/Panky)
 
 Panky is a chatting, github, Jira, jenkins loving
 web-app/bot/do-it-all/chef(?) for your team.
@@ -16,7 +16,7 @@ web-app/bot/do-it-all/chef(?) for your team.
 Panky lurks in your teams chat room (Jabber is currently supported) and provides
 useful information and functionality __all day long__.
 
-__Note: [Panky](http://search.cpan.org/perldoc?Panky) is still in active development and is not feature complete__
+__Note: [Panky](https://metacpan.org/pod/Panky) is still in active development and is not feature complete__
 
 Currently, Panky will connect to your chat server, update you about what's
 going on with your github repos (new pushes, pull request activity, comments,
@@ -61,15 +61,15 @@ Some sample usage:
 
 # INSTALLING
 
-[Panky](http://search.cpan.org/perldoc?Panky) requires a non-blocking server in order to run.  This means that
-you probably want to use either [Twiggy](http://search.cpan.org/perldoc?Twiggy), or the builtin [Mojolicious](http://search.cpan.org/perldoc?Mojolicious)
+[Panky](https://metacpan.org/pod/Panky) requires a non-blocking server in order to run.  This means that
+you probably want to use either [Twiggy](https://metacpan.org/pod/Twiggy), or the builtin [Mojolicious](https://metacpan.org/pod/Mojolicious)
 server.
 
-To install the dependencies for [Panky](http://search.cpan.org/perldoc?Panky), simply run:
+To install the dependencies for [Panky](https://metacpan.org/pod/Panky), simply run:
 
     cpanm --installdeps .
 
-If you're using OSX, there's a good chance [EV](http://search.cpan.org/perldoc?EV) will fail to install.  A nasty
+If you're using OSX, there's a good chance [EV](https://metacpan.org/pod/EV) will fail to install.  A nasty
 workaround for this for now, is to download the latest EV package tarball
 (link can be found here: https://metacpan.org/module/EV ), and modify the
 `Makefile.PL`.  Find the `WriteMakefile` section near the bottom, and add:
@@ -86,75 +86,75 @@ to its outermost arguments list.  You should get something like:
         DEFINE    => "$DEFINE",
         NAME => "EV",
 
-Once you've done that, you can `cpanm .` from inside the code directory to
+Once you've done that, you can \`cpanm .\` from inside the code directory to
 install it.  After that, the rest of the dependencies should install fine
-on OS X using `cpanm --installdeps .`
+on OS X using \`cpanm --installdeps .\`
 
 ## Environment Variables
 
-[Panky](http://search.cpan.org/perldoc?Panky) is configured via environment variables to make it easy to install on
+[Panky](https://metacpan.org/pod/Panky) is configured via environment variables to make it easy to install on
 systems like [Heroku](http://heroku.com).
 
-The following environment variables must be set for [Panky](http://search.cpan.org/perldoc?Panky) to run:
+The following environment variables must be set for [Panky](https://metacpan.org/pod/Panky) to run:
 
-- PANKY_BASE_URL
+- PANKY\_BASE\_URL
 
-This should be set to the base url that the [Panky](http://search.cpan.org/perldoc?Panky) server will be running on.
+    This should be set to the base url that the [Panky](https://metacpan.org/pod/Panky) server will be running on.
 
-- PANKY_GITHUB_USER
+- PANKY\_GITHUB\_USER
 
-The username of a Github user that will have access to whatever is needed.
+    The username of a Github user that will have access to whatever is needed.
 
-- PANKY_GITHUB_PWD
+- PANKY\_GITHUB\_PWD
 
-The Github password for the user mentioned above.
+    The Github password for the user mentioned above.
 
-- PANKY_CHAT_JABBER_JID
+- PANKY\_CHAT\_JABBER\_JID
 
-The `jid` of [Panky](http://search.cpan.org/perldoc?Panky)'s jabber account.
+    The `jid` of [Panky](https://metacpan.org/pod/Panky)'s jabber account.
 
-- PANKY_CHAT_JABBER_PWD
+- PANKY\_CHAT\_JABBER\_PWD
 
-The password for [Panky](http://search.cpan.org/perldoc?Panky)'s jabber account.
+    The password for [Panky](https://metacpan.org/pod/Panky)'s jabber account.
 
-- PANKY_CHAT_JABBER_HOST
+- PANKY\_CHAT\_JABBER\_HOST
 
-If you need to set your jabber host to something different than the domain
-part of the `jid`, then you can use this variable to do so.
+    If you need to set your jabber host to something different than the domain
+    part of the `jid`, then you can use this variable to do so.
 
-- PANKY_CHAT_JABBER_ROOM
+- PANKY\_CHAT\_JABBER\_ROOM
 
-The jabber conference room that [Panky](http://search.cpan.org/perldoc?Panky) should join.  This should be the
-full `jid` of the room, such as `room@conference.jabber.server.com`.
+    The jabber conference room that [Panky](https://metacpan.org/pod/Panky) should join.  This should be the
+    full `jid` of the room, such as `room@conference.jabber.server.com`.
 
 ## Jenkins Support
 
 You can also give it the `URL` to your [Jenkins](http://jenkins-ci.org) server
-via the `PANKY_JENKINS_URL` option.  [Panky](http://search.cpan.org/perldoc?Panky) will use this to generate
-links to Jenkins builds, etc.  If you want [Panky](http://search.cpan.org/perldoc?Panky) to be able to start builds
+via the `PANKY_JENKINS_URL` option.  [Panky](https://metacpan.org/pod/Panky) will use this to generate
+links to Jenkins builds, etc.  If you want [Panky](https://metacpan.org/pod/Panky) to be able to start builds
 on jenkins (from pull requests etc.) you should pass `PANKY_JENKINS_USER` and
 `PANKY_JENKINS_TOKEN` for authentication.
 
 ## JIRA Support
 
-[Panky](http://search.cpan.org/perldoc?Panky) can also work with JIRA if you have that.  You can enable JIRA support
+[Panky](https://metacpan.org/pod/Panky) can also work with JIRA if you have that.  You can enable JIRA support
 by setting the following environment variables:
 
-- PANKY_JIRA_URL
+- PANKY\_JIRA\_URL
 
-The url of your jira server: `https://company.atlassian.net/`
+    The url of your jira server: `https://company.atlassian.net/`
 
-- PANKY_JIRA_USER
+- PANKY\_JIRA\_USER
 
-The username to use to authenticate with your JIRA server.
+    The username to use to authenticate with your JIRA server.
 
-- PANKY_JIRA_PWD
+- PANKY\_JIRA\_PWD
 
-The password of the user used to authenticate with your JIRA server.
+    The password of the user used to authenticate with your JIRA server.
 
 ## Heroku
 
-To run [Panky](http://search.cpan.org/perldoc?Panky) in [Heroku](http://heroku.com), the easiest way is to use
+To run [Panky](https://metacpan.org/pod/Panky) in [Heroku](http://heroku.com), the easiest way is to use
 the [Perloku](https://github.com/judofyr/perloku) buildpack.
 
     $ git clone https://github.com/throughnothing/Panky
@@ -163,8 +163,8 @@ the [Perloku](https://github.com/judofyr/perloku) buildpack.
     # Optionally, if you want persistent storage across app restarts
     $ heroku addons:add heroku-postgresql(:dev)
 
-Now your heroku app is setup and ready to receive the [Panky](http://search.cpan.org/perldoc?Panky) application.
-Before you push [Panky](http://search.cpan.org/perldoc?Panky) to your app, you'll want to setup the environment
+Now your heroku app is setup and ready to receive the [Panky](https://metacpan.org/pod/Panky) application.
+Before you push [Panky](https://metacpan.org/pod/Panky) to your app, you'll want to setup the environment
 variables described above by using:
 
     $ heroku config:add ENVIRONMENT_VARIABLE="value"
@@ -177,24 +177,24 @@ Once all of that is set up, you can deploy the app using:
 
 This will deploy your app code, install all dependencies, and run it.
 
-If you have the PostgreSQL addon enabled, [Pany](http://search.cpan.org/perldoc?Pany) will detect the
+If you have the PostgreSQL addon enabled, [Pany](https://metacpan.org/pod/Pany) will detect the
 `DATABASE_URL` environment variable present, and use the PostgreSQL server,
 otherwise it falls back to sqlite storage, which will get lost whenever
 you restart your app.
 
 # USAGE
 
-Once configured and setup, [Panky](http://search.cpan.org/perldoc?Panky) is mostly interacted with via chat
-(jabber by default).  Below are some commands that [Panky](http://search.cpan.org/perldoc?Panky) accepts.  In
-general, these commands must be directed at the [Panky](http://search.cpan.org/perldoc?Panky) chat bot
+Once configured and setup, [Panky](https://metacpan.org/pod/Panky) is mostly interacted with via chat
+(jabber by default).  Below are some commands that [Panky](https://metacpan.org/pod/Panky) accepts.  In
+general, these commands must be directed at the [Panky](https://metacpan.org/pod/Panky) chat bot
 (i.e you must mention the bot by name: "panky: COMMAND").
 
-- gh setup _FULL_REPO_NAME_
+- gh setup _FULL\_REPO\_NAME_
 
-This will direct [Panky](http://search.cpan.org/perldoc?Panky) to setup [Github](http://github.com) Hooks for the
-repo in question. _FULL_REPO_NAME_ should look like `user/repo` or
-`organization/repo`.  The `GITHUB_USER` that is setup for [Panky](http://search.cpan.org/perldoc?Panky) must have
-access to the repo if it is private for this to work.
+    This will direct [Panky](https://metacpan.org/pod/Panky) to setup [Github](http://github.com) Hooks for the
+    repo in question. _FULL\_REPO\_NAME_ should look like `user/repo` or
+    `organization/repo`.  The `GITHUB_USER` that is setup for [Panky](https://metacpan.org/pod/Panky) must have
+    access to the repo if it is private for this to work.
 
 # AUTHOR
 

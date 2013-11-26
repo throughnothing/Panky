@@ -56,9 +56,10 @@ my %WriteMakefileArgs = (
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
-    "File::Find" => 0,
     "File::Slurp" => 0,
-    "File::Temp" => 0,
+    "File::Spec" => 0,
+    "IO::Handle" => 0,
+    "IPC::Open3" => 0,
     "Mojo::Message::Response" => 0,
     "Test::Mojo" => 0,
     "Test::More" => 0,
@@ -71,30 +72,56 @@ my %WriteMakefileArgs = (
 );
 
 
-unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
-  my $tr = delete $WriteMakefileArgs{TEST_REQUIRES};
-  my $br = $WriteMakefileArgs{BUILD_REQUIRES};
-  for my $mod ( keys %$tr ) {
-    if ( exists $br->{$mod} ) {
-      $br->{$mod} = $tr->{$mod} if $tr->{$mod} > $br->{$mod};
-    }
-    else {
-      $br->{$mod} = $tr->{$mod};
-    }
-  }
-}
+my %FallbackPrereqs = (
+  "AnyEvent::XMPP::Ext::Disco" => 0,
+  "AnyEvent::XMPP::Ext::MUC" => 0,
+  "AnyEvent::XMPP::IM::Connection" => 0,
+  "DBD::Pg" => "v2.19.3",
+  "DBIx::Class::Core" => 0,
+  "DBIx::Class::Schema" => 0,
+  "EV" => "4.11",
+  "Exporter" => 0,
+  "File::Slurp" => 0,
+  "File::Spec" => 0,
+  "Hash::AsObject" => 0,
+  "Hash::Merge::Simple" => 0,
+  "IO::Handle" => 0,
+  "IO::Socket::SSL" => "1.76",
+  "IPC::Open3" => 0,
+  "JE" => 0,
+  "JIRA::Client::REST" => "0.06",
+  "LWP::Protocol::https" => 0,
+  "Memoize" => 0,
+  "Module::CoreList" => 0,
+  "Module::Pluggable" => 0,
+  "Mojo::Base" => 0,
+  "Mojo::JSON" => 0,
+  "Mojo::Log" => 0,
+  "Mojo::Message::Response" => 0,
+  "Mojo::URL" => 0,
+  "Mojo::UserAgent" => 0,
+  "Mojo::Util" => 0,
+  "Net::Spotify" => 0,
+  "Regexp::Assemble" => 0,
+  "SQL::Translator" => "0.11012",
+  "Test::Mojo" => 0,
+  "Test::More" => 0,
+  "Test::Most" => 0,
+  "URI" => 0,
+  "WWW::DuckDuckGo" => 0,
+  "WWW::Shorten" => 0,
+  "WWW::Shorten::GitHub" => "v0.1.3",
+  "XML::TreePP" => 0,
+  "base" => 0,
+  "strict" => 0,
+  "warnings" => 0
+);
 
-unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
-  my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
-  my $pp = $WriteMakefileArgs{PREREQ_PM};
-  for my $mod ( keys %$br ) {
-    if ( exists $pp->{$mod} ) {
-      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
-    }
-    else {
-      $pp->{$mod} = $br->{$mod};
-    }
-  }
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
+  delete $WriteMakefileArgs{TEST_REQUIRES};
+  delete $WriteMakefileArgs{BUILD_REQUIRES};
+  $WriteMakefileArgs{PREREQ_PM} = \%FallbackPrereqs;
 }
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}

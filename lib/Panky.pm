@@ -114,9 +114,8 @@ sub _setup_chat {
         # Create Jabber Chat object
         $self->chat( $module->new( panky => $self )->connect );
     } else {
-        $module = 'Panky::Chat';
-        $self->log->info( "Using dummy $module for chat" );
-        eval "require $module";
+        $self->log->info( "Using dummy Panky::Chat for chat" );
+        require Panky::Chat;
         # Just use a Base chat object (which does nothing) otherwise
         $self->chat( Panky::Chat->new );
     }

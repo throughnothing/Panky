@@ -13,12 +13,12 @@ has [qw( panky nick )];
 
 sub new {
     my ($self, %args) = @_;
+    $self = $self->SUPER::new( %args );
 
     # Make sure we have all required fields
     for ( @{ $self->required_env } ) {
         die "$_ Required for Chat!" if !$ENV{$_};
     }
-    $self = $self->SUPER::new( %args );
 
     # Let your app setup your variables
     $self->setup;
