@@ -50,14 +50,14 @@ sub get_pull {
 
 sub create_pull_comment {
     my ($self, $nwo, $id, $comment) = @_;
-    $self->_req( POST_JSON => "/repos/$nwo/issues/$id/comments", {
+    $self->_req( POST => "/repos/$nwo/issues/$id/comments", {
         body => $comment,
     });
 }
 
 sub set_status {
     my ($self, $nwo, $sha, $state, $url, $desc) = @_;
-    $self->_req( POST_JSON => "/repos/$nwo/statuses/$sha", {
+    $self->_req( POST => "/repos/$nwo/statuses/$sha", {
         state => $state,
         target_url => $url,
         description => $desc,
@@ -77,7 +77,7 @@ sub get_hook {
 sub create_hook {
     my ($self, $nwo) = @_;
     my $res = $self->_req(
-        POST_JSON => "/repos/$nwo/hooks", {
+        POST => "/repos/$nwo/hooks", {
             name => 'web', active => 1,
             config => {
                 url => $self->hook_url,
@@ -101,7 +101,7 @@ sub test_hook {
 sub _req {
     my($self, $method, $path, $json) = @_;
     $method = lc($method);
-    $self->ua->$method( $self->url . $path, $json )->res->json;
+    $self->ua->$method( $self->url . $path, json => $json )->res->json;
 }
 
 1;
