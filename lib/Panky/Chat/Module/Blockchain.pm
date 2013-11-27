@@ -1,6 +1,7 @@
 package Panky::Chat::Module::Blockchain;
 use v5.10;
 use Mojo::Base 'Panky::Chat::Module';
+use Number::Format qw( format_number );
 use Blockchain;
 
 # ABSTRACT: Handles github action requests from users in chatroom
@@ -23,7 +24,7 @@ sub message {
             return unless $exchange;
             my $btc_amt = $1;
             my $cur_amt = $exchange->{symbol} .
-                sprintf( "%.2f", $exchange->{last} * $btc_amt );
+                format_number( $exchange->{last} * $btc_amt );
             $self->say("$1BTC => $cur_amt");
         }
         when (/(\d+.?(\d+)?) in (btc|bitcoin)/i) {
