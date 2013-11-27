@@ -24,7 +24,7 @@ sub message {
             return unless $exchange;
             my $btc_amt = $1;
             my $cur_amt = $exchange->{symbol} .
-                format_number( $exchange->{last} * $btc_amt );
+                format_number( $exchange->{last} * $btc_amt, 2 );
             $self->say("$1BTC => $cur_amt");
         }
         when (/(\d+.?(\d+)?) in (btc|bitcoin)/i) {
