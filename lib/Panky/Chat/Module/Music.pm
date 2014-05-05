@@ -28,6 +28,7 @@ sub message {
             $str .= sprintf(" <%s>\n", $_->{Url});
             $self->say( "$from: $str" );
         }
+        return 1;
     }
 }
 

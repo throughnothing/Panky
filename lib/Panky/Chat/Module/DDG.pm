@@ -28,6 +28,7 @@ sub directed_message {
     } else {
         $self->say( "$from: I have no fucking clue what $term means :(" );
     }
+    return 1;
 }
 
 sub _parse_msg {

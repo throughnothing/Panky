@@ -18,6 +18,7 @@ sub directed_message {
             s/he'?s/you're/g;
         }
         $self->say("$user: $phrase");
+        return 1;
     }
 }
 

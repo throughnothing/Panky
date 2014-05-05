@@ -1,5 +1,5 @@
 use Mojo::Util qw( url_escape );
-use Test::Most tests => 4;
+use Test::Most;
 
 use t::lib::Base qw( panky json );
 
@@ -87,3 +87,5 @@ subtest 'Build Hook w/chat = 1' => sub {
     $saying = pop @{ $panky->app->chat->sayings };
     like $saying->[0] => qr/failure/;
 };
+
+done_testing;

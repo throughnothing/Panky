@@ -1,4 +1,5 @@
 package Panky;
+use Hailo;
 use Mojo::Base 'Mojolicious';
 use Mojo::JSON;
 use Mojo::Log;
@@ -10,7 +11,7 @@ use Panky::Schema;
 
 # ABSTRACT: Panky is a chatty, github, issue, and-ci helper bot for your team
 
-has [qw( chat ci github base_url jira schema )];
+has [qw( chat ci github hailo base_url jira schema )];
 has json => sub { Mojo::JSON->new };
 has log => sub { Mojo::Log->new( level => $ENV{PANKY_LOG_LEVEL} || 'warn' ) };
 
@@ -39,6 +40,9 @@ sub startup {
 
     # Setup JIRA
     $self->_setup_jira unless $self->jira;
+
+    # Install Hailo
+    $self->_setup_hailo unless $self->hailo;
 
     # Set up our routes
     my $r = $self->routes;
@@ -164,6 +168,14 @@ sub _setup_jira {
             url => $ENV{PANKY_JIRA_URL},
         )
     );
+}
+
+sub _setup_hailo {
+    my ($self) = @_;
+    $self->hailo(Hailo->new);
+    # Load the brain from a training file
+    $self->hailo->train($ENV{PANKY_HAILO_BRAINFILE})
+        if $ENV{PANKY_HAILO_BRAINFILE} and -e $ENV{PANKY_HAILO_BRAINFILE};
 }
 
 1;

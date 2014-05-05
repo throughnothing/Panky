@@ -33,10 +33,16 @@ sub new {
 sub dispatch {
     my ($self, $type, $msg, $from) = @_;
 
+    my $dispatched;
+
     # Plugins come from Module::Pluggable
     for ( $self->plugins( panky => $self->panky ) ) {
         # Make sure it can handle this method
-        $_->$type( $msg , $from ) if $_->can( $type );
+        $dispatched ||= $_->$type( $msg , $from ) if $_->can($type);
+    }
+
+    if ('directed_message' eq $type and not $dispatched) {
+        $self->panky->chat->say("$from: " . $self->panky->hailo->reply($msg));
     }
 }
 

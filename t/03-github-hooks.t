@@ -1,5 +1,5 @@
 use File::Slurp qw( read_file );
-use Test::Most tests => 3;
+use Test::Most;
 use Mojo::Message::Response;
 
 use t::lib::Base qw( panky json );
@@ -83,3 +83,5 @@ subtest 'Pull Request Reopened Hook, With Bad Jenkins Res' => sub {
     is @$sayings => 1, 'Said one thing on pull request' or explain $sayings;
     like $sayings->[0][0] => qr/error starting/, 'Said about jenkins error';
 };
+
+done_testing;

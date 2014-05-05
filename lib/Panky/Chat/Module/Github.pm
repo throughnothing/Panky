@@ -51,15 +51,20 @@ sub directed_message {
     my $gh = $self->panky->github;
 
     given( $msg ) {
-        when( /gh help/ ) { $self->help( $from ) }
+        when( /gh help/ ) {
+            $self->help( $from );
+            return 1;
+        }
         when( /gh setup (\S+)/ ) {
             # Setup a hook for a repo
             $gh->create_hook( $1 );
             $self->say( "$from: Setup $1!" );
+            return 1;
         }
         when( /gh test-hooks (\S+)/ ) {
             # Test the specified hook
             $gh->test_hook( $1 );
+            return 1;
         }
         when( /gh prs (\S+)( \+[sS])?/ ){
             my $repo = $self->_get_repo( $1 );
@@ -86,22 +91,26 @@ sub directed_message {
                 }
                 $self->say( "$number: $title$state- $url" );
             }
+            return 1;
         }
         when ( /gh set repo (\S+) => (\S+)/ ) {
             # Add a repo mapping
             $self->_set_repo_alias( $1, $2 );
             $self->say( "$from: got it!" );
+            return 1;
         }
         when ( /gh unset repo (\S+)/ ) {
             # Remove a repo mapping
             $self->_unset_repo_alias( $1 );
             $self->say( "$from: repo alias removed!" );
+            return 1;
         }
         when ( /gh show repo (\S+)/ ) {
             # Show a repo mapping
             my $repo = $self->_get_repo( $1, $2 );
             $repo = ($repo eq $1) ? 'none' : $repo;
             $self->say( "$from: $1 => $repo" );
+            return 1;
         }
         when ( /test (\S+) (pr \d+|([0-9a-f]{5,40}))/ ) {
             # Match retesting a pr or a hash
@@ -109,7 +118,10 @@ sub directed_message {
 
             # See if we have a Jenkins Build for this repo
             my $job_name = $self->panky->ci->job_for_repo( $repo );
-            return $self->say( "No jobs found for $repo!" ) unless $job_name;
+            unless ($job_name) {
+                $self->say( "No jobs found for $repo!" );
+                return 1;
+            }
 
             my $sha = $2;
             # If we were given a PR, we must get the head sha1 of it
@@ -117,7 +129,8 @@ sub directed_message {
                 my $pr_num = $1;
                 my $pr = $self->panky->github->get_pull( $repo, $pr_num );
                 unless ( $pr && $pr->{head} && $pr->{head}{sha} ){
-                    return $self->say("$from: Error getting $repo PR $pr_num!");
+                    $self->say("$from: Error getting $repo PR $pr_num!");
+                    return 1;
                 }
                 $sha = $pr->{head}{sha};
             }
@@ -129,6 +142,7 @@ sub directed_message {
             $gh->set_status( $repo, $sha, 'pending' );
 
             $self->say( "$from: Testing $repo $short_sha ($job_name)...");
+            return 1;
         }
     }
 }

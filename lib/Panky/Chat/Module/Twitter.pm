@@ -18,6 +18,7 @@ sub message {
         my $user = $res->dom('div.tweet div.content span.username b')->first->text;
         my $tweet = $res->dom('div.tweet p.tweet-text')->first->text;
         $self->say( "\@$user: $tweet" ) if $user && $tweet;
+        return 1;
     }
 
 }
