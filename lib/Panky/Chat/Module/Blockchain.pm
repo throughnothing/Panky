@@ -40,7 +40,10 @@ sub message {
 sub directed_message {
     my ($self, $msg, $from) = @_;
     given( $msg ) {
-        when( /(bitcoin|btc) help/i ) { $self->help( $from ) }
+        when( /(bitcoin|btc) help/i ) {
+            $self->help( $from );
+            return 1;
+        }
     }
 }
 
@@ -49,6 +52,7 @@ sub help {
     for( @{ $self->blockchain->methods } ) {
         $self->say( "$from: bitcoin $_ ...");
     }
+    return 1;
 };
 
 1;

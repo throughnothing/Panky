@@ -13,23 +13,27 @@ sub directed_message {
             # Add a repo mapping
             $self->_set_repo_job( $1, $2 );
             $self->say( "$from: got it!" );
+            return 1;
         }
         when ( /ci unset repo (\S+)/ ) {
             # Remove a repo mapping
             $self->_unset_repo_job( $1 );
             $self->say( "$from: repo job removed!" );
+            return 1;
         }
         when ( /ci show repo (\S+)/ ) {
             # Show a repo mapping
             my $repo = $self->_get_job( $1, $2 );
             $repo = ($repo eq $1) ? 'none' : $repo;
             $self->say( "$from: $1 => $repo" );
+            return 1;
         }
         when ( /ci run (\S+)/ ) {
             # See if we have a Jenkins Build for this repo
             my $job_name = $1;
             my $res = $self->panky->ci->build( $job_name );
             $self->say( "$from: building $job_name..." );
+            return 1;
         }
     }
 }
